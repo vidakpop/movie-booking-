@@ -15,7 +15,7 @@ const Signup = () => {
             <input type="text" placeholder='Name' className='w-full p-2 my-2 bg-gray-800 border border-neon text-white' />
             <input type="email" placeholder='Email' className='w-full p-2 my-2 bg-gray-800 border border-neon text-white'/>
             <input type="password" placeholder='Password' className='w-full p-2 my-2 bg-gray-800 border border-neon text-white' />
-            
+            <button className='bg-neon w-full py-2 rounded mt-4'>Sign Up</button>
         </div>
         
     </motion.div>
