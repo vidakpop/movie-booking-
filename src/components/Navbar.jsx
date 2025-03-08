@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 
 
 const Navbar = () => {
+    const [isOpen, setIsOpen] = useState(false);
   return (
     <div>Navbar</div>
   )
