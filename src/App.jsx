@@ -6,6 +6,9 @@ const App = () => {
   return (
     <div>
       <Navbar />
+      <Router>
+        <Route path='/login' element={<Login />}/>
+      </Router>
     </div>
   )
 }
