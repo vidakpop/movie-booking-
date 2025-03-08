@@ -20,6 +20,9 @@ const Navbar = () => {
             <Link to="/signup" className="hover:text-neon">Sign Up</Link>
 
         </div>
+        <button onClick={() => setOpen(!Open)} className="md:hidden text-neon text-2xl">
+        ☰
+        </button>
 
     </motion.nav>
   )
