@@ -4,6 +4,6 @@
 body {
   /* Ensure Tailwind CSS plugin for @apply is configured */
   background-color: var(--darkBg);
-  color: white;
+  color: rgb(241, 169, 169);
   font-family: 'Futuristic', sans-serif;
 }
