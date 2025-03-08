@@ -13,7 +13,7 @@ const Signup = () => {
                 Sign Up
             </h2>
             <input type="text" placeholder='Name' className='w-full p-2 my-2 bg-gray-800 border border-neon text-white' />
-            
+            <input type="email" placeholder='Email' className='w-full p-2 my-2 bg-gray-800 border border-neon text-white'/>
         </div>
         
     </motion.div>
