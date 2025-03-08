@@ -1,5 +1,5 @@
 import React from 'react'
-import { Router,Route } from 'react-router-dom'
+import { Routes,Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Login from './pages/Login'
 
@@ -7,9 +7,9 @@ const App = () => {
   return (
     <div>
       <Navbar />
-      <Router>
+      <Routes>
         <Route path='/login' element={<Login />}/>
-      </Router>
+      </Routes>
     </div>
   )
 }
