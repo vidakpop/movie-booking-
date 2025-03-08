@@ -4,9 +4,16 @@ import { motion } from "framer-motion";
 
 
 const Navbar = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [Open, setOpen] = useState(false);
   return (
-    <div>Navbar</div>
+    <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        transition={{ type: "spring", stiffness: 100 }}
+        className="fixed top-0 w-full bg-black bg-opacity-50 p-4 flex justify-between items-center z-50"
+    >
+
+    </motion.nav>
   )
 }
 
