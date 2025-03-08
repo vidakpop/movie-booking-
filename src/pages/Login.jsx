@@ -10,6 +10,9 @@ const Login = () => {
        
         className="flex flex-col items-center justify-center h-screen"
     >
+        <div className='bg-black bg-opacity-60 p-8 rounded-lg shadow-lg'>
+
+        </div>
 
     </motion.div>
   )
