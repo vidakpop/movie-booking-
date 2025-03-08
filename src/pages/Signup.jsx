@@ -8,6 +8,12 @@ const Signup = () => {
         animate={{opacity: 1,scale: 1}}
         className='h-screen flex items-center justify-center'
     >
+        <div className='bg-black bg-opacity-60 p-8 rounded-lg shadow-lg'>
+            <h2 className='text-3xl text-neon mb-4'>
+                Sign Up
+            </h2>
+
+        </div>
         
     </motion.div>
   )
