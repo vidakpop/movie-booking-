@@ -14,10 +14,10 @@ const Navbar = () => {
     >
         <Link to="/" className="text-neon text-2xl font-bold">🎬 MovieVerse</Link>
         <div className="space-x-4 hidden md:flex">
-            <Link to="/" className="text-white">Home</Link>
-            <Link to="/movies" className="text-white">Movies</Link>
-            <Link to="/login" className="text-white">Login</Link>
-            <Link to="/signup" className="text-white">Sign Up</Link>
+            <Link to="/" className="hover:text-neon">Home</Link>
+            <Link to="/movies" className="hover:text-neon">Movies</Link>
+            <Link to="/login" className="hover:text-neon">Login</Link>
+            <Link to="/signup" className="hover:text-neon">Sign Up</Link>
 
         </div>
 
