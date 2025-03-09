@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 
 const Login = () => {
+  const [formData,setFormData]=useState({username:"",password:""})
+  const [error,setError]=useState("")
   return (
     <motion.div
         initial={{ opacity: 0 ,scale: 0.8}}
@@ -14,7 +16,7 @@ const Login = () => {
             <h2 className='text-3xl text-neon mb-4'>Login</h2>
             <input type="email" placeholder='Email' className='w-full p-2 my-2 bg-gray-800 border border-neon text-white' />
             <input type="password" placeholder="Password" className="w-full p-2 my-2 bg-gray-800 border border-neon text-white" />
-            <button className="bg-neon w-full py-2 rounded mt-4">Login</button>
+            auth<button className="bg-neon w-full py-2 rounded mt-4">Login</button>
             <p className="mt-4 text-gray-400">Don't have an account? <Link to="/signup" className="text-neon">Sign up</Link></p>
 
 
