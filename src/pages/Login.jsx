@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const Login = () => {
   const [formData,setFormData]=useState({username:"",password:""})
@@ -10,7 +11,19 @@ const Login = () => {
   const handleChange= (e) => {
     setFormData({...formData,[e.target.name]:e.target.value})
   }
-  
+  const handleSubmit=async (e) => {
+    e.preventDefault()
+    setError("")
+
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/api/auth/login/",formData)
+      localStorage.setItem("access_token",response.data.access_token)
+      navigate("/")
+
+    }
+    catch (error) {
+      setError("Invalid credentials")
+  }
 
   return (
     <motion.div
