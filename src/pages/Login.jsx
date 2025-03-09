@@ -6,7 +6,12 @@ const Login = () => {
   const [formData,setFormData]=useState({username:"",password:""})
   const [error,setError]=useState("")
   const navigate = useNavigate()
+
+  const handleChange= (e) => {
+    setFormData({...formData,[e.target.name]:e.target.value})
+  }
   
+
   return (
     <motion.div
         initial={{ opacity: 0 ,scale: 0.8}}
