@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Login = () => {
   const [formData,setFormData]=useState({username:"",password:""})
   const [error,setError]=useState("")
+  const navigate = useNavigate()
+  
   return (
     <motion.div
         initial={{ opacity: 0 ,scale: 0.8}}
