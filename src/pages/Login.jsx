@@ -19,7 +19,7 @@ const Login = () => {
     try {
       const response = await axios.post("http://127.0.0.1:8000/api/auth/login/", formData);
       localStorage.setItem("access_token", response.data.access_token);
-      navigate("/");
+      navigate("/dashboard");
     } catch (err) {
       setError("Invalid credentials");
     }
@@ -35,7 +35,7 @@ const Login = () => {
         <div className='bg-black bg-opacity-60 p-8 rounded-lg shadow-lg'>
             <h2 className='text-3xl text-neon mb-4'>Login</h2>
             {error && <p className="text-red-500">{error}</p>}
-            <form action="">
+            actionaction  <form onSubmit={handleSubmit}>
               <input type="text" name="username" placeholder='Username' onChange={handleChange} className='w-full p-2 my-2 bg-gray-800 border border-neon text-white' />
               <input type="password" name='password' placeholder="Password" onChange={handleChange} className="w-full p-2 my-2 bg-gray-800 border border-neon text-white" />
               <button className="bg-neon w-full py-2 rounded mt-4">Login</button>
