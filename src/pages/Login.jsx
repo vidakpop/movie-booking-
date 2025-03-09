@@ -4,26 +4,26 @@ import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const Login = () => {
-  const [formData,setFormData]=useState({username:"",password:""})
-  const [error,setError]=useState("")
-  const navigate = useNavigate()
+  const [formData, setFormData] = useState({ username: "", password: "" });
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleChange= (e) => {
-    setFormData({...formData,[e.target.name]:e.target.value})
-  }
-  const handleSubmit=async (e) => {
-    e.preventDefault()
-    setError("")
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/auth/login/",formData)
-      localStorage.setItem("access_token",response.data.access_token)
-      navigate("/")
-
+      const response = await axios.post("http://127.0.0.1:8000/api/auth/login/", formData);
+      localStorage.setItem("access_token", response.data.access_token);
+      navigate("/");
+    } catch (err) {
+      setError("Invalid credentials");
     }
-    catch (error) {
-      setError("Invalid credentials")
-  }
+  };
 
   return (
     <motion.div
@@ -34,6 +34,7 @@ const Login = () => {
     >
         <div className='bg-black bg-opacity-60 p-8 rounded-lg shadow-lg'>
             <h2 className='text-3xl text-neon mb-4'>Login</h2>
+            
             <input type="email" placeholder='Email' className='w-full p-2 my-2 bg-gray-800 border border-neon text-white' />
             <input type="password" placeholder="Password" className="w-full p-2 my-2 bg-gray-800 border border-neon text-white" />
             auth<button className="bg-neon w-full py-2 rounded mt-4">Login</button>
