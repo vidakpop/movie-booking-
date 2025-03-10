@@ -3,6 +3,7 @@ import axios from 'axios'
 import { motion } from 'framer-motion'
 
 const movies = () => {
+    const [movies, setMovies] = useState([])
   return (
     <div>movies</div>
   )
