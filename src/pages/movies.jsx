@@ -13,6 +13,18 @@ const movies = () => {
     const bookTicket= async(movieId) =>{
         const token = localStorage.getItem('access_token')
         if (!token) return alert("You must be logged in to book tickets")
+        try {
+                await axios.post('http://127.0.0.1:8000/api/bookings/',
+                    {movie_id: movieId,seats:1},
+                    {headers: {Authorization: `Bearer ${token}`}}
+                )
+                alert('Booking successful!')
+            }
+        catch (error) {
+            console.error('Error booking ticket', error)
+            alert('Error booking ticket')
+        }
+                
     }
   return (
     <motion.div
