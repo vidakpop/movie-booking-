@@ -19,7 +19,7 @@ const Login = () => {
     try {
       const response = await axios.post("http://127.0.0.1:8000/api/auth/login/", formData);
       localStorage.setItem("access_token", response.data.access_token);
-      navigate("/dashboard");
+      navigate("/movies");
     } catch (err) {
       setError("Invalid credentials");
     }
