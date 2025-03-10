@@ -10,6 +10,10 @@ const movies = () => {
         .then(response => setMovies(response.data))
         .catch(error => console.error("Error fetching movies", error))
     },[])
+    const bookTicket= async(movieId) =>{
+        const token = localStorage.getItem('access_token')
+        if (!token) return alert("You must be logged in to book tickets")
+    }
   return (
     <motion.div
         initial={{ opacity: 0 ,scale: 0.8}}
