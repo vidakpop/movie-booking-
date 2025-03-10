@@ -21,10 +21,13 @@ const movies = () => {
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             transition={{ type: "spring", stiffness: 100 }}
-            className="text-3xl text-neon font-bold text-center"
+            className="text-4xl text-neon font-bold text-center mb-6"
         >
             🎥 Movie Collection
         </motion.h1>
+        <div className='grid grid-cols-3 gap-6'>
+
+        </div>
 
     </motion.div>
   )
