@@ -26,6 +26,12 @@ const movies = () => {
             🎥 Movie Collection
         </motion.h1>
         <div className='grid grid-cols-3 gap-6'>
+            {movies.map(movie =>(
+                <motion.div>
+                    
+                </motion.div>
+
+            ))}
 
         </div>
 
