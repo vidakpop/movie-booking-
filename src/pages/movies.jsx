@@ -27,7 +27,11 @@ const movies = () => {
         </motion.h1>
         <div className='grid grid-cols-3 gap-6'>
             {movies.map(movie =>(
-                <motion.div>
+                <motion.div
+                  className='p-4 bg-gray-800 rounded-lg shadow-xl'
+                  whileHover={{scale:1.05}}
+                >
+                    <img src="" alt="" />
 
                 </motion.div>
 
