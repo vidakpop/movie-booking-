@@ -5,16 +5,16 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Hero from './components/Hero'
 //import Dashboard from './pages/Dashboard'
-import movies from './pages/movies'
+import Movies from './pages/movies'
 
 const App = () => {
   return (
     <div>
       <Navbar />
-      <Hero />
+     {/* <Hero />*/}
       <Routes>
         <Route path='/login' element={<Login />}/>
-        <Route path='/movies' element={<movies />}/>
+        <Route path='/movies' element={<Movies />}/>
         <Route path='/signup' element={<Signup/>}/>
       </Routes>
     </div>
