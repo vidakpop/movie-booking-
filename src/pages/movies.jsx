@@ -15,20 +15,20 @@ const movies = () => {
         initial={{ opacity: 0 ,scale: 0.8}}
         animate={{ opacity: 1 ,scale: 1}}
        
-        className="bg-black min-h-screen p-10"
+        className="bg-black min-h-screen p-10 "
     >
         <motion.h1
             initial={{ y: -100 }}
             animate={{ y: 0 }}
             transition={{ type: "spring", stiffness: 100 }}
-            className="text-4xl text-neon font-bold text-center mb-6"
+            className="text-4xl text-neon font-bold text-center mb-6 p-10"
         >
             🎥 Movie Collection
         </motion.h1>
         <div className='grid grid-cols-3 gap-6'>
             {movies.map(movie =>(
                 <motion.div>
-                    
+
                 </motion.div>
 
             ))}
