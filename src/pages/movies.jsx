@@ -36,6 +36,7 @@ const movies = () => {
                     <p className='text-gray-400'>{movie.genre}</p>
                     <p className='text-white'>{movie.description}</p>
                     <p className='text-green-499'>Ksh{movie.price}</p>
+                    <button className='bg-neon w-full py-2 mt-3 rounded '>Book Ticket</button>
 
 
 
