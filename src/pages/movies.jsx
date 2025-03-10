@@ -32,6 +32,8 @@ const movies = () => {
                   whileHover={{scale:1.05}}
                 >
                     <img src={movie.poster} alt={movie.title} className='rounded-lg w-full' />
+                    <h2 className='text-white text-xl mt-3'>{movie.title}</h2>
+
 
                 </motion.div>
 
