@@ -31,7 +31,7 @@ const movies = () => {
                   className='p-4 bg-gray-800 rounded-lg shadow-xl'
                   whileHover={{scale:1.05}}
                 >
-                    <img src="" alt="" />
+                    <img src={movie.poster} alt={movie.title} className='rounded-lg w-full' />
 
                 </motion.div>
 
