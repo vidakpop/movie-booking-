@@ -33,6 +33,9 @@ const movies = () => {
                 >
                     <img src={movie.poster} alt={movie.title} className='rounded-lg w-full' />
                     <h2 className='text-white text-xl mt-3'>{movie.title}</h2>
+                    <p className='text-gray-400'>{movie.genre}</p>
+                    <p className='text-green-499'>Ksh{movie.price}</p>
+
 
 
                 </motion.div>
