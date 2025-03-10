@@ -11,7 +11,14 @@ const movies = () => {
         .catch(error => console.error("Error fetching movies", error))
     },[])
   return (
-    <div>movies</div>
+    <motion.div
+        initial={{ opacity: 0 ,scale: 0.8}}
+        animate={{ opacity: 1 ,scale: 1}}
+       
+        className="bg-black min-h-screen p-10"
+    >
+
+    </motion.div>
   )
 }
 
