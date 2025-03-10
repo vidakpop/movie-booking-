@@ -17,6 +17,14 @@ const movies = () => {
        
         className="bg-black min-h-screen p-10"
     >
+        <motion.h1
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ type: "spring", stiffness: 100 }}
+            className="text-3xl text-neon font-bold text-center"
+        >
+            🎥 Movie Collection
+        </motion.h1>
 
     </motion.div>
   )
