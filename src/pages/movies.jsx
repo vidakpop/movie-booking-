@@ -147,6 +147,7 @@ const Movies = () => {
           </motion.div>
         ))}
       </div>
+      
     </motion.div>
   );
 };
