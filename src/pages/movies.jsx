@@ -118,7 +118,7 @@ const Movies = () => {
             className="mb-4 p-4 rounded-xl bg-gray-900 border border-gray-700 hover:border-purple-500 transition-all duration-200"
           >
             <p className="font-bold text-lg text-gray-100">{cinema.name}</p>
-            <p className="text-sm text-gray-400">{cinema.location}</p>
+            <p className="text-sm text-gray-400"><b className="text-red-400">Location:</b>{cinema.location}</p>
             <p className="text-sm text-gray-400">
               Slots:{" "}
               <span
