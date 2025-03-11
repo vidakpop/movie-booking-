@@ -41,10 +41,10 @@ const movies = () => {
         >
             🎥 Movie Collection
         </motion.h1>
-        <div className='grid grid-cols-3 gap-6'>
+        <div className='grid grid-cols-3 gap-6 md:grid-cols-4 lg:grid-cols-5 sm:grid-cols-2'>
             {movies.map(movie =>(
                 <motion.div
-                  className='p-4 bg-gray-800 rounded-lg shadow-xl'
+                  className='p-4 bg-gray-800 rounded-lg shadow-xl '
                   whileHover={{scale:1.05}}
                 >
                     <img src={movie.poster} alt={movie.title} className='rounded-lg w-full' />
