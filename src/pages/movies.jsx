@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 const Movies = () => {
   const [movies, setMovies] = useState([]);
   const [cinemas, setCinemas] = useState({}); // Store available cinemas
+  const MEDIA_URL="http://127.0.0.1:8000/posters/";
 
   useEffect(() => {
     axios
@@ -66,6 +67,7 @@ const Movies = () => {
     try {
       await axios.post(
         "http://127.0.0.1:8000/api/bookings/",
+        
         { movie_id: movieId, cinema_id: cinemaId, seats: 1 },
         {
           headers: {
@@ -128,7 +130,7 @@ const Movies = () => {
             whileHover={{ scale: 1.05 }}
           >
             <img
-              src={movie?.poster}
+              src={movie.poster.startsWith("http") ? movie.poster : `${MEDIA_URL}${movie.poster}`}
               alt={movie?.title}
               className="rounded-lg w-full"
             />
