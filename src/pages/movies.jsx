@@ -4,51 +4,37 @@ import { motion } from "framer-motion";
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
-  const [cinemas, setCinemas] = useState({}); // Store available cinemas
-  const MEDIA_URL="http://127.0.0.1:8000/posters/";
+  const [cinemas, setCinemas] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const MEDIA_URL = "http://127.0.0.1:8000/posters/";
 
   useEffect(() => {
     axios
       .get("http://127.0.0.1:8000/api/movies/")
       .then((response) => setMovies(response.data))
       .catch((error) => console.error("Error fetching movies", error));
-
-    axios
-      .get("http://127.0.0.1:8000/api/cinemas/") // Fetch cinemas
-      .then((response) => {
-        const cinemaMap = {};
-        response.data.forEach((cinema) => {
-          cinemaMap[cinema.id] = cinema;
-        });
-        setCinemas(cinemaMap);
-      })
-      .catch((error) => console.error("Error fetching cinemas", error));
   }, []);
 
-  const refreshToken = async () => {
-    const refresh = localStorage.getItem("refresh_token");
-    if (!refresh) {
-      alert("Session expired. Please log in again.");
-      window.location.href = "/login";
-      return null;
-    }
-
+  const fetchCinemasForMovie = async (movieId) => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/token/refresh/", {
-        refresh: refresh,
-      });
-
-      localStorage.setItem("access_token", response.data.access);
-      return response.data.access;
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/cinemas/?movie_id=${movieId}`
+      );
+      setCinemas(response.data);
+      setSelectedMovie(movieId);
+      setShowPopup(true);
     } catch (error) {
-      console.error("Error refreshing token", error.response?.data || error);
-      alert("Session expired. Please log in again.");
-      window.location.href = "/login";
-      return null;
+      console.error("Error fetching cinemas", error);
     }
   };
 
-  const bookTicket = async (movieId) => {
+  const bookTicket = async (cinema) => {
+    if (cinema.capacity === 0) {
+      alert("Slots Full! No tickets available.");
+      return;
+    }
+
     let token = localStorage.getItem("access_token");
 
     if (!token) {
@@ -56,19 +42,10 @@ const Movies = () => {
       return;
     }
 
-    // Find the first cinema associated with the movie
-    const movie = movies.find((m) => m.id === movieId);
-    if (!movie || movie.cinemas.length === 0) {
-      alert("No available cinema for this movie");
-      return;
-    }
-    const cinemaId = movie.cinemas[0]; // Pick the first available cinema
-
     try {
-      await axios.post(
+      const response = await axios.post(
         "http://127.0.0.1:8000/api/bookings/",
-        
-        { movie_id: movieId, cinema_id: cinemaId, seats: 1 },
+        { movie_id: selectedMovie, cinema_id: cinema.id, seats: 1 },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -76,34 +53,12 @@ const Movies = () => {
           },
         }
       );
-      alert("Booking successful!");
-    } catch (error) {
-      if (error.response?.data?.code === "token_not_valid") {
-        console.warn("Access token expired. Trying to refresh...");
-        token = await refreshToken();
-        if (!token) return;
 
-        // Retry the request with new token
-        try {
-          await axios.post(
-            "http://127.0.0.1:8000/api/bookings/",
-            { movie_id: movieId, cinema_id: cinemaId, seats: 1 },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          alert("Booking successful!");
-        } catch (error) {
-          console.error("Error booking ticket after refresh", error.response?.data || error);
-          alert("Error booking ticket");
-        }
-      } else {
-        console.error("Error booking ticket", error.response?.data || error);
-        alert("Error booking ticket");
-      }
+      alert("Booking successful! Redirecting to payment...");
+      window.location.href = "/payment"; // Redirect to payment page
+    } catch (error) {
+      console.error("Error booking ticket", error.response?.data || error);
+      alert("Error booking ticket");
     }
   };
 
@@ -139,7 +94,7 @@ const Movies = () => {
             <p className="text-white">{movie?.description}</p>
             <p className="text-green-500 font-semibold">Ksh {movie?.price}</p>
             <button
-              onClick={() => bookTicket(movie.id)}
+              onClick={() => fetchCinemasForMovie(movie.id)}
               className="bg-blue-500 hover:bg-blue-600 text-white w-full py-2 mt-3 rounded"
             >
               Book Ticket
@@ -147,7 +102,56 @@ const Movies = () => {
           </motion.div>
         ))}
       </div>
-      
+
+      {showPopup && (
+  <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center backdrop-blur-sm">
+    <div className="bg-gradient-to-br from-gray-800 to-black p-8 rounded-2xl border border-gray-700 shadow-2xl w-96 transform transition-transform duration-300 hover:scale-105">
+      <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+        Select a Cinema
+      </h2>
+      {cinemas.length === 0 ? (
+        <p className="text-gray-400">No cinemas available</p>
+      ) : (
+        cinemas.map((cinema) => (
+          <div
+            key={cinema.id}
+            className="mb-4 p-4 rounded-xl bg-gray-900 border border-gray-700 hover:border-purple-500 transition-all duration-200"
+          >
+            <p className="font-bold text-lg text-gray-100">{cinema.name}</p>
+            <p className="text-sm text-gray-400">{cinema.location}</p>
+            <p className="text-sm text-gray-400">
+              Slots:{" "}
+              <span
+                className={`font-semibold ${
+                  cinema.capacity > 0 ? "text-green-400" : "text-red-400"
+                }`}
+              >
+                {cinema.capacity > 0 ? cinema.capacity : "Full"}
+              </span>
+            </p>
+            <button
+              onClick={() => bookTicket(cinema)}
+              className={`w-full py-2 mt-3 rounded-lg font-semibold transition-all duration-200 ${
+                cinema.capacity > 0
+                  ? "bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white"
+                  : "bg-gray-700 text-gray-500 cursor-not-allowed"
+              }`}
+              disabled={cinema.capacity === 0}
+            >
+              {cinema.capacity > 0 ? "Book Now" : "Slots Full"}
+            </button>
+          </div>
+        ))
+      )}
+      <button
+        onClick={() => setShowPopup(false)}
+        className="mt-6 w-full py-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-semibold rounded-lg transition-all duration-200"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+)}
     </motion.div>
   );
 };
