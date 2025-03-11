@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
+  const [cinemas, setCinemas] = useState({});
 
   useEffect(() => {
     axios
