@@ -102,7 +102,7 @@ const Movies = () => {
           </motion.div>
         ))}
       </div>
-
+  {/*Fix thr cinema issue showing all the cinemas availab;e but not the ones registerd with the mvie being booked */}
       {showPopup && (
   <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center backdrop-blur-sm">
     <div className="bg-gradient-to-br from-gray-800 to-black p-8 rounded-2xl border border-gray-700 shadow-2xl w-96 transform transition-transform duration-300 hover:scale-105">
