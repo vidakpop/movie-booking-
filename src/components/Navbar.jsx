@@ -14,13 +14,13 @@ const Navbar = () => {
     >
         <Link to="/" className="text-white text-2xl font-bold flex items-center gap-2">🎬 MovieVerse</Link>
         <div className="space-x-4 hidden md:flex">
-            <Link to="/" className="hover:text-neon">Home</Link>
-            <Link to="/movies" className="hover:text-neon">Movies</Link>
-            <Link to="/login" className="hover:text-neon">Login</Link>
-            <Link to="/signup" className="hover:text-neon">Sign Up</Link>
+            <Link to="/" className="hover:text-blue-400 cursor-pointer text-white">Home</Link>
+            <Link to="/movies" className="hover:text-blue-400 cursor-pointer text-white">Movies</Link>
+            <Link to="/login" className="hover:text-blue-400 cursor-pointer text-white">Login</Link>
+            <Link to="/signup" className="hover:text-blue-400 cursor-pointer text-white">Sign Up</Link>
 
         </div>
-        <button onClick={() => setOpen(!Open)} className="md:hidden text-neon text-2xl">
+        <button onClick={() => setOpen(!Open)} className="md:hidden text-white text-2xl">
         ☰
         </button>
 
