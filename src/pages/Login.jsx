@@ -31,10 +31,13 @@ const Login = () => {
         initial={{ opacity: 0 ,scale: 0.8}}
         animate={{ opacity: 1 ,scale: 1}}
        
-        className="flex  items-center justify-center h-screen"
+        className="flex bg-black items-center justify-center h-screen"
     >
+      
+    
+
         <div className='bg-black bg-opacity-60 p-8 rounded-lg shadow-lg'>
-            <h2 className='text-3xl text-neon mb-4'>Login</h2>
+            <h2 className='text-3xl text-white mb-4'>Login</h2>
             {error && <p className="text-red-500">{error}</p>}
             <form onSubmit={handleSubmit}>
               <input type="text" name="username" placeholder='Username' onChange={handleChange} className='w-full p-2 my-2 bg-gray-800 border border-neon text-white' />
