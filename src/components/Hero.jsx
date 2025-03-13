@@ -1,5 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Stars } from "@react-three/drei";
+import {TypeAnimation} from 'react-type-animation';
 
 const Hero = () => {
   return (
