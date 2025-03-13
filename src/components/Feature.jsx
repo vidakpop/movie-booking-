@@ -4,8 +4,9 @@ import { FaFilm, FaTheaterMasks, FaMobileAlt, FaRegCreditCard } from "react-icon
 
 const Feature = () => {
   return (
-    <section>
-        
+    <section className="py-16 bg-gray-900 text-center">
+        <h2>What we offer</h2>
+
     </section>
   )
 }
