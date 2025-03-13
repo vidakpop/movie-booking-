@@ -4,7 +4,7 @@ import Navbar from './components/Navbar'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Hero from './components/Hero'
-//import Dashboard from './pages/Dashboard'
+import Dashboard from './pages/Dashboard'
 import Movies from './pages/movies'
 
 const App = () => {
@@ -13,6 +13,7 @@ const App = () => {
       <Navbar />
      {/* <Hero />*/}
       <Routes>
+        <Route path='/' element={<Dashboard />}/>
         <Route path='/login' element={<Login />}/>
         <Route path='/movies' element={<Movies />}/>
         <Route path='/signup' element={<Signup/>}/>

@@ -2,7 +2,9 @@ import React from 'react'
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <div className='relative  w-full h-screen overflow-hidden bg-black text-white'>
+     
+    </div>
   )
 }
 
