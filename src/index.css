@@ -1,9 +1,2 @@
 @import "tailwindcss";
 
-/* Custom futuristic styling */
-body {
-  /* Ensure Tailwind CSS plugin for @apply is configured */
-  background-color: var(--darkBg);
-  color: rgb(241, 169, 169);
-  font-family: 'Futuristic', sans-serif;
-}

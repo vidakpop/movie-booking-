@@ -12,7 +12,7 @@ const Navbar = () => {
         transition={{ type: "spring", stiffness: 100 }}
         className="fixed top-0 w-full bg-black bg-opacity-50 p-4 flex justify-between items-center z-50"
     >
-        <Link to="/" className="text-neon text-2xl font-bold">🎬 MovieVerse</Link>
+        <Link to="/" className="text-white text-2xl font-bold flex items-center gap-2">🎬 MovieVerse</Link>
         <div className="space-x-4 hidden md:flex">
             <Link to="/" className="hover:text-neon">Home</Link>
             <Link to="/movies" className="hover:text-neon">Movies</Link>
