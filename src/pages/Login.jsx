@@ -33,7 +33,11 @@ const Login = () => {
        
         className="flex bg-black items-center justify-center h-screen"
     >
-      
+      <Threads
+        amplitude={1}
+        distance={0}
+        enableMouseInteraction={true}
+      />
     
 
         <div className='bg-black bg-opacity-60 p-8 rounded-lg shadow-lg'>
@@ -42,8 +46,8 @@ const Login = () => {
             <form onSubmit={handleSubmit}>
               <input type="text" name="username" placeholder='Username' onChange={handleChange} className='w-full p-2 my-2 bg-gray-800 border border-neon text-white' />
               <input type="password" name='password' placeholder="Password" onChange={handleChange} className="w-full p-2 my-2 bg-gray-800 border border-neon text-white" />
-              <button className="bg-neon w-full py-2 rounded mt-4">Login</button>
-              <p className="mt-4 text-gray-400">Don't have an account? <Link to="/signup" className="text-neon">Sign up</Link></p>
+              <button className="bg-black bg-opacity-90 text-white w-full py-2 rounded mt-4">Login</button>
+              <p className="mt-4 text-blue-400">Don't have an account? <Link to="/signup" className="text-gray-400">Sign up</Link></p>
 
             </form>
 
