@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import Threads from '../components/Threads'
 
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
