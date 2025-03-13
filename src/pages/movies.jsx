@@ -7,6 +7,8 @@ const Movies = () => {
   const [cinemas, setCinemas] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   const MEDIA_URL = "http://127.0.0.1:8000/posters/";
 
   useEffect(() => {
@@ -16,8 +18,10 @@ const Movies = () => {
       .catch((error) => console.error("Error fetching movies", error));
   }, []);
 
+  // Fetch cinemas that are showing the selected movie only
   const fetchCinemasForMovie = async (movieId) => {
     try {
+      setLoading(true);
       const response = await axios.get(
         `http://127.0.0.1:8000/api/cinemas/?movie_id=${movieId}`
       );
@@ -26,9 +30,45 @@ const Movies = () => {
       setShowPopup(true);
     } catch (error) {
       console.error("Error fetching cinemas", error);
+    } finally {
+      setLoading(false);
     }
   };
 
+  // Handle Mpesa Payment Before Booking
+  const handleMpesaPayment = async (cinema) => {
+    let phoneNumber = prompt("Enter your M-Pesa number:");
+    if (!phoneNumber || phoneNumber.length < 10) {
+      alert("Invalid phone number.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const paymentResponse = await axios.post(
+        "http://127.0.0.1:8000/api/mpesa/pay/",
+        {
+          phone: phoneNumber,
+          amount: 100, // Set movie price dynamically from backend
+          movie_id: selectedMovie,
+          cinema_id: cinema.id,
+        }
+      );
+
+      if (paymentResponse.data.status === "success") {
+        bookTicket(cinema);
+      } else {
+        alert("Payment failed. Try again.");
+      }
+    } catch (error) {
+      console.error("Payment error:", error.response?.data || error);
+      alert("Payment error. Try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Book Ticket only after successful payment
   const bookTicket = async (cinema) => {
     if (cinema.capacity === 0) {
       alert("Slots Full! No tickets available.");
@@ -36,7 +76,6 @@ const Movies = () => {
     }
 
     let token = localStorage.getItem("access_token");
-
     if (!token) {
       alert("You must be logged in to book tickets");
       return;
@@ -54,8 +93,8 @@ const Movies = () => {
         }
       );
 
-      alert("Booking successful! Redirecting to payment...");
-      window.location.href = "/payment"; // Redirect to payment page
+      alert("Booking successful!");
+      setShowPopup(false);
     } catch (error) {
       console.error("Error booking ticket", error.response?.data || error);
       alert("Error booking ticket");
@@ -97,61 +136,61 @@ const Movies = () => {
               onClick={() => fetchCinemasForMovie(movie.id)}
               className="bg-blue-500 hover:bg-blue-600 text-white w-full py-2 mt-3 rounded"
             >
-              Book Ticket
+              {loading ? "Loading..." : "Book Ticket"}
             </button>
           </motion.div>
         ))}
       </div>
-  {/*Fix the cinema issue showing all the cinemas availab;e but not the ones registerd with the mvie being booked */}
+
       {showPopup && (
-  <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center backdrop-blur-sm">
-    <div className="bg-gradient-to-br from-gray-800 to-black p-8 rounded-2xl border border-gray-700 shadow-2xl w-96 transform transition-transform duration-300 hover:scale-105">
-      <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
-        Select a Cinema
-      </h2>
-      {cinemas.length === 0 ? (
-        <p className="text-gray-400">No cinemas available</p>
-      ) : (
-        cinemas.map((cinema) => (
-          <div
-            key={cinema.id}
-            className="mb-4 p-4 rounded-xl bg-gray-900 border border-gray-700 hover:border-purple-500 transition-all duration-200"
-          >
-            <p className="font-bold text-lg text-gray-100">{cinema.name}</p>
-            <p className="text-sm text-gray-400"><b className="text-red-400">Location:</b>{cinema.location}</p>
-            <p className="text-sm text-gray-400">
-              Slots:{" "}
-              <span
-                className={`font-semibold ${
-                  cinema.capacity > 0 ? "text-green-400" : "text-red-400"
-                }`}
-              >
-                {cinema.capacity > 0 ? cinema.capacity : "Full"}
-              </span>
-            </p>
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center backdrop-blur-sm">
+          <div className="bg-gradient-to-br from-gray-800 to-black p-8 rounded-2xl border border-gray-700 shadow-2xl w-96 transform transition-transform duration-300 hover:scale-105">
+            <h2 className="text-3xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">
+              Select a Cinema
+            </h2>
+            {cinemas.length === 0 ? (
+              <p className="text-gray-400">No cinemas available</p>
+            ) : (
+              cinemas.map((cinema) => (
+                <div
+                  key={cinema.id}
+                  className="mb-4 p-4 rounded-xl bg-gray-900 border border-gray-700 hover:border-purple-500 transition-all duration-200"
+                >
+                  <p className="font-bold text-lg text-gray-100">{cinema.name}</p>
+                  <p className="text-sm text-gray-400"><b className="text-red-400">Location:</b>{cinema.location}</p>
+                  <p className="text-sm text-gray-400">
+                    Slots:{" "}
+                    <span
+                      className={`font-semibold ${
+                        cinema.capacity > 0 ? "text-green-400" : "text-red-400"
+                      }`}
+                    >
+                      {cinema.capacity > 0 ? cinema.capacity : "Full"}
+                    </span>
+                  </p>
+                  <button
+                    onClick={() => handleMpesaPayment(cinema)}
+                    className={`w-full py-2 mt-3 rounded-lg font-semibold transition-all duration-200 ${
+                      cinema.capacity > 0
+                        ? "bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white"
+                        : "bg-gray-700 text-gray-500 cursor-not-allowed"
+                    }`}
+                    disabled={cinema.capacity === 0 || loading}
+                  >
+                    {loading ? "Processing Payment..." : "Pay & Book"}
+                  </button>
+                </div>
+              ))
+            )}
             <button
-              onClick={() => bookTicket(cinema)}
-              className={`w-full py-2 mt-3 rounded-lg font-semibold transition-all duration-200 ${
-                cinema.capacity > 0
-                  ? "bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white"
-                  : "bg-gray-700 text-gray-500 cursor-not-allowed"
-              }`}
-              disabled={cinema.capacity === 0}
+              onClick={() => setShowPopup(false)}
+              className="mt-6 w-full py-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-semibold rounded-lg transition-all duration-200"
             >
-              {cinema.capacity > 0 ? "Book Now" : "Slots Full"}
+              Close
             </button>
           </div>
-        ))
+        </div>
       )}
-      <button
-        onClick={() => setShowPopup(false)}
-        className="mt-6 w-full py-2 bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 text-white font-semibold rounded-lg transition-all duration-200"
-      >
-        Close
-      </button>
-    </div>
-  </div>
-)}
     </motion.div>
   );
 };
