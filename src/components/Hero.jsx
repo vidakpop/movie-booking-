@@ -12,8 +12,15 @@ const Hero = () => {
         <Stars />
       </Canvas>
       <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 text-center">
-        <h1 className="text-5xl text-neon font-bold">Welcome to MovieVerse</h1>
-        <p className="mt-4 text-gray-400">Your gateway to unlimited entertainment</p>
+        <h1 className="text-5xl font-extrabold drop-shadow-lg">
+          <TypeAnimation
+            sequence={["Welcome to Multiverse", 1000, "Your gateway to unlimited entertainment", 1000]}
+            wrapper="span"
+            speed={50}
+            repeat={Infinity}
+          />
+          </h1>
+        <p className="mt-4 text-gray-400">Discover Cinemas & Movies, Book Instantly with Mpesa</p>
       </div>
     </div>
   );
