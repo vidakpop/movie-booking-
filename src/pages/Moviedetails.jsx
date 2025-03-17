@@ -32,6 +32,7 @@ const Moviedetails = () => {
                 alt={movie.title}
                 className="rounded-lg w-full"
             />
+            <h1 className='text-4xl font-bold mt-4'>{movie.title}</h1>
 
         </div>
 
