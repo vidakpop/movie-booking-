@@ -21,6 +21,11 @@ const Booking = () => {
         setSeatingChart(cinema.seating_chart)
         setSelectedCinema([])
     }
+    const handleSeatSelect = (row, col) => {
+        if (seatingChart[row][col] === 'X') return; // Seat already booked
+        const seatKey = `${row}-${col}`;
+        setSelectedSeats(prev => prev.includes(seatKey) ? prev.filter(s => s !== seatKey) : [...prev, seatKey]);
+      };
 
   return (
     <div>Booking</div>
