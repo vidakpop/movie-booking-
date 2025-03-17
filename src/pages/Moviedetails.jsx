@@ -26,6 +26,14 @@ const Moviedetails = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
     >
+        <div className='max-w-4xl mx-auto bg-gray-900 p-6 rounded-lg shadow-lg'>
+            <img
+                src={movie.poster}
+                alt={movie.title}
+                className="rounded-lg w-full"
+            />
+
+        </div>
 
     </motion.div>
   )
