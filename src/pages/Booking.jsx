@@ -15,7 +15,13 @@ const Booking = () => {
         .then(response => setCinemas(response.data))
         .catch(error => console.error('Error fetching cinemas',error))
     },[movieId])
-    
+
+    const handleCinemaSelect = (cinema) => {
+        setSelectedCinema(cinema)
+        setSeatingChart(cinema.seating_chart)
+        setSelectedCinema([])
+    }
+
   return (
     <div>Booking</div>
   )
