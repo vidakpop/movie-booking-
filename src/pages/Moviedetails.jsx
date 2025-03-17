@@ -18,6 +18,8 @@ const Moviedetails = () => {
           })
           .catch((error) => console.error("Error fetching movie details", error));
       }, [id]);
+
+      if (loading) return <p className="text-white text-center">Loading...</p>;
   return (
     <div>Moviedetails</div>
   )
