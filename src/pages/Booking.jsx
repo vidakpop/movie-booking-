@@ -26,12 +26,30 @@ const Booking = () => {
         const seatKey = `${row}-${col}`;
         setSelectedSeats(prev => prev.includes(seatKey) ? prev.filter(s => s !== seatKey) : [...prev, seatKey]);
       };
-    const handleBooking = () => {
-        if (!selectedCinema || selectedSeats.length === 0){
-            alert("Please select a cinema and at least one seat.");
-            return 
+      const handleBooking = () => {
+        if (!selectedCinema || selectedSeats.length === 0) {
+          alert("Please select a cinema and at least one seat.");
+          return;
         }
-    }
+    
+        setLoading(true);
+        axios.post("/api/bookings/", {
+          movie_id: movieId,
+          cinema_id: selectedCinema.id,
+          seats: selectedSeats.map(seat => seat.split('-').map(Number))
+        })
+        .then(response => {
+          alert("Booking successful!");
+          setSeatingChart(prevChart => prevChart.map((row, rowIndex) =>
+            row.map((seat, colIndex) =>
+              selectedSeats.includes(`${rowIndex}-${colIndex}`) ? 'X' : seat
+            )
+          ));
+          setSelectedSeats([]);
+        })
+        .catch(error => alert("Booking failed: " + error.response.data.message))
+        .finally(() => setLoading(false));
+      };
 
   return (
     <div>Booking</div>
