@@ -22,7 +22,7 @@ const Moviedetails = () => {
       if (loading) return <p className="text-white text-center">Loading...</p>;
   return (
     <motion.div
-        className="bg-black min-h-screen p-10"
+        className="bg-black min-h-screen p-10 text-white"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
     >
