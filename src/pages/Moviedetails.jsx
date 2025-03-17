@@ -35,7 +35,14 @@ const Moviedetails = () => {
             <h1 className='text-4xl font-bold mt-4'>{movie.title}</h1>
             <p className='text-gray-400 mt-2'>{movie.genre}</p>
             <p className='mt-4'>{movie.description}</p>
-            
+            <p className='mt-2 text-green-400 font-bold'>Ksh {movie.price}</p>
+            <button
+                onClick={() => navigate(`/bookings/${movie.id}`)}
+                className='mt-4 w-full py-2 bg-blue-500 hover:bg-blue-600 rounded-lg'
+            >
+                Book Now
+            </button>
+
 
 
         </div>
