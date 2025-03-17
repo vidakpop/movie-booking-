@@ -33,6 +33,10 @@ const Moviedetails = () => {
                 className="rounded-lg w-full"
             />
             <h1 className='text-4xl font-bold mt-4'>{movie.title}</h1>
+            <p className='text-gray-400 mt-2'>{movie.genre}</p>
+            <p className='mt-4'>{movie.description}</p>
+            
+
 
         </div>
 
