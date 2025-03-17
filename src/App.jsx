@@ -7,6 +7,7 @@ import Hero from './components/Hero'
 import Dashboard from './pages/Dashboard'
 import Movies from './pages/movies'
 import Moviedetails from './pages/Moviedetails'
+import Booking from './pages/Booking'
 
 const App = () => {
   return (
@@ -19,6 +20,7 @@ const App = () => {
         <Route path='/movies' element={<Movies />}/>
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/movies/:id' element={<Moviedetails/>}/>
+        <Route path='/bookings/:id' element={<Booking/>}/>
       </Routes>
     </div>
   )
