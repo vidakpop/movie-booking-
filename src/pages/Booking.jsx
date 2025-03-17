@@ -26,6 +26,12 @@ const Booking = () => {
         const seatKey = `${row}-${col}`;
         setSelectedSeats(prev => prev.includes(seatKey) ? prev.filter(s => s !== seatKey) : [...prev, seatKey]);
       };
+    const handleBooking = () => {
+        if (!selectedCinema || selectedSeats.length === 0){
+            alert("Please select a cinema and at least one seat.");
+            return 
+        }
+    }
 
   return (
     <div>Booking</div>
