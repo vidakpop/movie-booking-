@@ -1,54 +1,122 @@
-import { useEffect,useState } from 'react'
-import { useParams,useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { motion, useAnimation } from 'framer-motion';
 
 const Moviedetails = () => {
-    const { id } = useParams()
-    const navigate = useNavigate()
-    const [movie, setMovie] = useState(null)
-    const [loading, setLoading] = useState(true)
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const [movie, setMovie] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const controls = useAnimation();
 
     useEffect(() => {
         axios
-          .get(`http://127.0.0.1:8000/api/movies/${id}/`)
-          .then((response) => {
-            setMovie(response.data);
-            setLoading(false);
-          })
-          .catch((error) => console.error("Error fetching movie details", error));
-      }, [id]);
+            .get(`http://127.0.0.1:8000/api/movies/${id}/`)
+            .then((response) => {
+                setMovie(response.data);
+                setLoading(false);
+            })
+            .catch((error) => console.error("Error fetching movie details", error));
+    }, [id]);
 
-      if (loading) return <p className="text-white text-center">Loading...</p>;
-  return (
-    <motion.div
-        className="bg-black min-h-screen p-10 text-white"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-    >
-        <div className='max-w-4xl mx-auto bg-gray-900 p-6 rounded-lg shadow-lg'>
-            <img
-                src={movie.poster}
-                alt={movie.title}
-                className="rounded-lg w-full"
-            />
-            <h1 className='text-4xl font-bold mt-4'>{movie.title}</h1>
-            <p className='text-gray-400 mt-2'>{movie.genre}</p>
-            <p className='mt-4'>{movie.description}</p>
-            <p className='mt-2 text-green-400 font-bold'>Ksh {movie.price}</p>
-            <button
-                onClick={() => navigate(`/bookings/${movie.id}`)}
-                className='mt-4 w-full py-2 bg-blue-500 hover:bg-blue-600 rounded-lg'
-            >
-                Book Now
-            </button>
+    useEffect(() => {
+        if (!loading) {
+            controls.start({
+                opacity: 1,
+                y: 0,
+                transition: { duration: 0.8, ease: "easeOut" }
+            });
+        }
+    }, [loading, controls]);
 
+    if (loading) return <p className="text-white text-center">Loading...</p>;
 
+    return (
+        <motion.div
+            className="bg-black min-h-screen text-white overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+        >
+            {/* Split-screen layout */}
+            <div className="flex flex-col lg:flex-row h-screen">
+                {/* Left side: Movie Poster */}
+                <motion.div
+                    className="w-full lg:w-1/2 h-1/2 lg:h-full relative overflow-hidden"
+                    initial={{ opacity: 0, x: -100 }}
+                    animate={controls}
+                >
+                    <img
+                        src={movie.poster}
+                        alt={movie.title}
+                        className="w-full h-full object-cover"
+                    />
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-70"></div>
+                    {/* Floating 3D effect */}
+                    <motion.div
+                        className="absolute inset-0"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ type: "spring", stiffness: 300 }}
+                    >
+                        <div className="absolute bottom-8 left-8">
+                            <motion.h1
+                                className="text-5xl font-bold"
+                                initial={{ opacity: 0, y: 50 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.5, duration: 1 }}
+                            >
+                                {movie.title}
+                            </motion.h1>
+                            <motion.p
+                                className="text-gray-400 mt-2 text-xl"
+                                initial={{ opacity: 0, y: 50 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.7, duration: 1 }}
+                            >
+                                {movie.genre}
+                            </motion.p>
+                        </div>
+                    </motion.div>
+                </motion.div>
 
-        </div>
+                {/* Right side: Movie Details */}
+                <motion.div
+                    className="w-full lg:w-1/2 h-1/2 lg:h-full p-8 lg:p-16 flex flex-col justify-center bg-gray-900"
+                    initial={{ opacity: 0, x: 100 }}
+                    animate={controls}
+                >
+                    <motion.p
+                        className="text-xl text-gray-300 leading-relaxed"
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.9, duration: 1 }}
+                    >
+                        {movie.description}
+                    </motion.p>
+                    <motion.p
+                        className="mt-6 text-3xl text-green-400 font-bold"
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.1, duration: 1 }}
+                    >
+                        Ksh {movie.price}
+                    </motion.p>
+                    <motion.button
+                        onClick={() => navigate(`/bookings/${movie.id}`)}
+                        className="mt-8 w-full lg:w-1/2 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-lg font-semibold"
+                        initial={{ opacity: 0, y: 50 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 1.3, duration: 1 }}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                    >
+                        Book Now
+                    </motion.button>
+                </motion.div>
+            </div>
+        </motion.div>
+    );
+};
 
-    </motion.div>
-  )
-}
-
-export default Moviedetails
+export default Moviedetails;
