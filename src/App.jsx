@@ -6,6 +6,7 @@ import Signup from './pages/Signup'
 import Hero from './components/Hero'
 import Dashboard from './pages/Dashboard'
 import Movies from './pages/movies'
+import Moviedetails from './pages/Moviedetails'
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route path='/login' element={<Login />}/>
         <Route path='/movies' element={<Movies />}/>
         <Route path='/signup' element={<Signup/>}/>
+        <Route path='/movies/${movie.id}' element={<Moviedetails/>}/>
       </Routes>
     </div>
   )
