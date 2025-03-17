@@ -9,6 +9,13 @@ const Booking = () => {
     const [seatingChart,setSeatingChart] = useState([])
     const [selectedSeats,setSelectedSeats] = useState([])
     const [loading,setLoading] = useState(false)
+
+    useEffect(() =>{
+        axios.get(`/api/cinemas/?movie_id=${movieId}`)
+        .then(response => setCinemas(response.data))
+        .catch(error => console.error('Error fetching cinemas',error))
+    },[movieId])
+    
   return (
     <div>Booking</div>
   )
