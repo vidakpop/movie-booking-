@@ -59,6 +59,11 @@ const Booking = () => {
        {/*Cinema Selection */}
        <div className='mb-6'>
         <label className='text-lg'>Select Cinema</label>
+        <select 
+          className='ml-2 p-2 bg-gray-800 rounded text-white'
+          onChange={(e) => handleCinemaSelect(cinemas.find((c) => c.id == e.target.value))}
+          >
+        </select>
 
        </div>
     </div>
