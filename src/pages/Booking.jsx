@@ -53,12 +53,12 @@ const Booking = () => {
 
   return (
     <div className='min-h-screen bg-gray-900 text-white flex flex-col items-center p-6'>
-       <h1 className='text-3xl font-bold mb-6 p-15'>
+       <h1 className='text-3xl font-bold  p-15'>
         Book your seat
        </h1> 
        {/*Cinema Selection */}
        <div className='mb-6'>
-        
+        <label className='text-lg'>Select Cinema</label>
 
        </div>
     </div>
