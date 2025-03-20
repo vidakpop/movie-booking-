@@ -57,6 +57,10 @@ const Booking = () => {
         Book your seat
        </h1> 
        {/*Cinema Selection */}
+       <div className='mb-6'>
+        
+
+       </div>
     </div>
   )
 }
