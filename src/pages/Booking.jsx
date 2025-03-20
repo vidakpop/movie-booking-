@@ -70,6 +70,9 @@ const Booking = () => {
             ))}*/}
         </select>
 
+        {/* Seating Selection */}
+        
+
        </div>
     </div>
   )
