@@ -52,7 +52,11 @@ const Booking = () => {
       };
 
   return (
-    <div>Booking</div>
+    <div className='min-h-screen bg-gray-900 text-white flex flex-col items-center p-6'>
+       <h1>
+        Book your seat
+       </h1> 
+    </div>
   )
 }
 
