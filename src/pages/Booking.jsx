@@ -2,6 +2,7 @@ import React, {useState,useEffect} from 'react'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { option } from 'framer-motion/client'
 const Booking = () => {
     const {movieId} = useParams()
     const [cinemas,setCinemas] = useState([])
@@ -64,6 +65,9 @@ const Booking = () => {
           onChange={(e) => handleCinemaSelect(cinemas.find((c) => c.id == e.target.value))}
           >
             <option value="">-- Select --</option>
+            {cinemas.map((cinema) => (
+              <option key={cinema.id} value={cinema.id}>{cinema.name}</option>
+            ))}
         </select>
 
        </div>
