@@ -65,9 +65,9 @@ const Booking = () => {
           onChange={(e) => handleCinemaSelect(cinemas.find((c) => c.id == e.target.value))}
           >
             <option value="">-- Select --</option>
-            {cinemas.map((cinema) => (
+           {/*  {cinemas.map((cinema) => (
               <option key={cinema.id} value={cinema.id}>{cinema.name}</option>
-            ))}
+            ))}*/}
         </select>
 
        </div>
