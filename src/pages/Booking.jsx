@@ -63,6 +63,7 @@ const Booking = () => {
           className='ml-2 p-2 bg-gray-800 rounded text-white'
           onChange={(e) => handleCinemaSelect(cinemas.find((c) => c.id == e.target.value))}
           >
+            <option value="">-- Select --</option>
         </select>
 
        </div>
