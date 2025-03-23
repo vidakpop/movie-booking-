@@ -40,13 +40,25 @@ const Booking = () => {
       alert('Please select a cinema and at least one seat.');
       return;
     }
-
+  
     setLoading(true);
-    axios.post('http://127.0.0.1:8000/api/bookings/', {
-      movie_id: movieId,
-      cinema_id: selectedCinema.id,
-      seats: selectedSeats.map((seat) => seat.split('-').map(Number)),
-    })
+  
+    // Get token from localStorage (or wherever it's stored)
+    const token = localStorage.getItem("token");  
+  
+    axios.post(
+      'http://127.0.0.1:8000/api/bookings/',
+      {
+        movie_id: movieId,
+        cinema_id: selectedCinema.id,
+        seats: selectedSeats.map((seat) => seat.split('-').map(Number)),
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`, // Add token to headers
+        },
+      }
+    )
       .then(() => {
         alert('Booking successful!');
         setSeatingChart((prevChart) =>
@@ -61,6 +73,7 @@ const Booking = () => {
       .catch((error) => alert('Booking failed: ' + (error.response?.data?.message || "Unknown error")))
       .finally(() => setLoading(false));
   };
+  
 
   const seatGrid = useMemo(() => {
     if (!seatingChart.length) return <p className="text-gray-400">No seating chart available</p>;
