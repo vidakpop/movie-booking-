@@ -33,14 +33,14 @@ const Moviedetails = () => {
     if (loading) return <p className="text-white text-center">Loading...</p>;
 
     return (
-        <motion.div
-            className="bg-gradient-to-br from-gray-900 via-gray-800 to-black min-h-screen text-white overflow-hidden"
-            initial={{ opacity: 0 }}
+        <motion.div 
+            className="bg-black min-h-screen text-white overflow-hidden" 
+            initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }}
         >
             <div className="flex flex-col lg:flex-row h-screen">
                 <motion.div
-                    className="relative overflow-hidden"
+                    className="w-1/2 lg:w-1/2 h-1/2 lg:h-full relative overflow-hidden"
                     initial={{ opacity: 0, x: -100 }}
                     animate={controls}
                 >
@@ -57,7 +57,7 @@ const Moviedetails = () => {
                     >
                         <div className="absolute bottom-8 left-8">
                             <motion.h1
-                                className="text-6xl font-extrabold text-cyan-500"
+                                className="text-5xl font-bold text-cyan-400"
                                 initial={{ opacity: 0, y: 50 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.5, duration: 1 }}
@@ -65,7 +65,7 @@ const Moviedetails = () => {
                                 {movie.title}
                             </motion.h1>
                             <motion.p
-                                className="text-gray-400 mt-2 text-2xl"
+                                className="text-gray-400 mt-2 text-xl"
                                 initial={{ opacity: 0, y: 50 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.7, duration: 1 }}
@@ -76,12 +76,12 @@ const Moviedetails = () => {
                     </motion.div>
                 </motion.div>
                 <motion.div
-                    className="w-full lg:w-1/2 h-1/2 lg:h-full p-8 lg:p-16 flex flex-col justify-center bg-gray-900"
+                    className="w-1/2 lg:w-1/2 h-1/2 lg:h-full p-8 lg:p-16 flex flex-col justify-center bg-gray-900"
                     initial={{ opacity: 0, x: 100 }}
                     animate={controls}
                 >
                     <motion.p
-                        className="text-2xl text-gray-300 leading-relaxed"
+                        className="text-xl text-gray-300 leading-relaxed"
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.9, duration: 1 }}
@@ -89,7 +89,7 @@ const Moviedetails = () => {
                         {movie.description}
                     </motion.p>
                     <motion.p
-                        className="mt-6 text-4xl text-green-500 font-bold"
+                        className="mt-6 text-3xl text-green-400 font-bold"
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1.1, duration: 1 }}
@@ -98,7 +98,7 @@ const Moviedetails = () => {
                     </motion.p>
                     <motion.button
                         onClick={() => navigate(`/bookings/${movie.id}`)}
-                        className="mt-8 w-full lg:w-1/2 py-4 bg-blue-600 hover:bg-blue-700 rounded-lg text-xl font-bold shadow-lg"
+                        className="mt-8 w-full lg:w-1/2 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-lg font-semibold"
                         initial={{ opacity: 0, y: 50 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 1.3, duration: 1 }}
