@@ -23,12 +23,13 @@ const Booking = () => {
     const cinema = cinemas.find((c) => c.id == cinemaId);
     if (cinema) {
       setSelectedCinema(cinema);
-      setSeatingChart(cinema.seating_chart || []);
+      setSeatingChart(Array.isArray(cinema.seating_chart) ? cinema.seating_chart : []);
       setSelectedSeats([]);
     }
   };
 
   const handleSeatSelect = (row, col) => {
+    if (!Array.isArray(seatingChart) || !Array.isArray(seatingChart[row])) return;
     if (seatingChart[row][col] === 'X') return;
 
     const seatKey = `${row}-${col}`;
@@ -60,13 +61,17 @@ const Booking = () => {
         );
         setSelectedSeats([]);
       })
-      .catch((error) => alert('Booking failed: ' + error.response?.data?.message || "Unknown error"))
+      .catch((error) => alert('Booking failed: ' + (error.response?.data?.message || "Unknown error")))
       .finally(() => setLoading(false));
   };
 
-  const seatGrid = useMemo(() => (
-    seatingChart.map((row, rowIndex) =>
-      row.map((seat, colIndex) => {
+  const seatGrid = useMemo(() => {
+    if (!Array.isArray(seatingChart)) return <p>No seating chart available</p>;
+
+    return seatingChart.map((row, rowIndex) => {
+      if (!Array.isArray(row)) return null; // Ensure each row is an array
+
+      return row.map((seat, colIndex) => {
         const isSelected = selectedSeats.includes(`${rowIndex}-${colIndex}`);
         return (
           <motion.div
@@ -80,9 +85,9 @@ const Booking = () => {
             {seat === 'X' ? 'X' : 'O'}
           </motion.div>
         );
-      })
-    )
-  ), [seatingChart, selectedSeats]);
+      });
+    });
+  }, [seatingChart, selectedSeats]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-6">
