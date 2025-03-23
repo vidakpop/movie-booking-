@@ -1,5 +1,5 @@
 import React from 'react'
-import { Routes,Route } from 'react-router-dom'
+import { Routes,Route ,BrowserRouter as Router} from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -20,7 +20,7 @@ const App = () => {
         <Route path='/movies' element={<Movies />}/>
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/movies/:id' element={<Moviedetails/>}/>
-        <Route path='/bookings/:id' element={<Booking/>}/>
+        <Route path='/bookings/:movieId' element={<Booking/>}/>
       </Routes>
     </div>
   )
