@@ -70,31 +70,29 @@ const Booking = () => {
             ))}*/}
         </select>
 
-        {/* Seating Selection */}
-        <div className='bg-gray-800 p-4 rounded-lg '>
-          <h2 className='text-xl font-semibold mb-4'>
-            Select Seats
-          </h2>
-          <div className='grid grid-cols-10 gap-2 mt-4'>
-            {seatingChart.map((row, rowIndex)=>
-             row.map((seat, colIndex)=>(
-              <motion.div
-                key={`${rowIndex}-${colIndex}`}
-                className={`w-8 h-8 flex items-center justify-center rounded ${
-                  seat=== 'x' ? 'bg-red-500' :selectedSeats.includes(`${rowIndex}-${colIndex}`) ? 'bg-green-500 scale-110' : 'bg-gray-600'
-                }`}
-                whileTap={{scale:0.8}}
-                onClick={() => handleSeatSelect(rowIndex,colIndex)}
-              >
-                {seat === 'X' ? 'X': 'O'}
-
-              </motion.div>
-             ))
+        {selectedCinema && (
+        <div className="bg-gray-800 p-4 rounded-lg">
+          <h2 className="text-xl font-semibold mb-4">Select Seats</h2>
+          <div className="grid grid-cols-10 gap-2">
+            {seatingChart.map((row, rowIndex) =>
+              row.map((seat, colIndex) => (
+                <motion.div
+                  key={`${rowIndex}-${colIndex}`}
+                  className={`w-8 h-8 flex items-center justify-center rounded ${
+                    seat === 'X' ? 'bg-red-500' : selectedSeats.includes(`${rowIndex}-${colIndex}`)
+                      ? 'bg-green-500 scale-110'
+                      : 'bg-gray-600'
+                  }`}
+                  whileTap={{ scale: 0.8 }}
+                  onClick={() => handleSeatSelect(rowIndex, colIndex)}
+                >
+                  {seat === 'X' ? 'X' : 'O'}
+                </motion.div>
+              ))
             )}
-
           </div>
-
         </div>
+      )}
         
 
        </div>
