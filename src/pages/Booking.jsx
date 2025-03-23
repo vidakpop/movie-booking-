@@ -71,6 +71,15 @@ const Booking = () => {
         </select>
 
         {/* Seating Selection */}
+        <div className='bg-gray-800 p-4 rounded-lg'>
+          <h2 className='text-xl font-semibold mb-4'>
+            Select Seats
+          </h2>
+          <div className='grid grid-cols-10 gap-2'>
+
+          </div>
+
+        </div>
         
 
        </div>
