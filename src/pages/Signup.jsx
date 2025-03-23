@@ -1,3 +1,4 @@
+// Signup.js
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
@@ -5,11 +6,7 @@ import axios from 'axios';
 import Threads from '../components/Threads';
 
 const Signup = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: ""
-  });
+  const [formData, setFormData] = useState({ username: "", email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -21,74 +18,44 @@ const Signup = () => {
     e.preventDefault();
     setError("");
 
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match!");
+      return;
+    }
+
     try {
       await axios.post("http://127.0.0.1:8000/api/auth/signup/", formData);
       navigate("/login");
     } catch (err) {
-      setError("❌ Sign-up failed. Try again.");
+      setError("Signup failed. Try again.");
     }
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="flex bg-black items-center justify-center h-screen relative overflow-hidden"
-    >
+    <div className="relative w-full h-screen bg-black flex items-center justify-center overflow-hidden">
+      {/* Background Animation */}
       <Threads amplitude={1} distance={0} enableMouseInteraction={true} />
 
-      {/* Cyberpunk Background */}
-      <div className="absolute inset-0 bg-gradient-to-r from-blue-900 via-black to-purple-900 opacity-50"></div>
-
+      {/* Signup Form */}
       <motion.div
-        className="relative z-10 bg-black bg-opacity-70 p-8 rounded-lg shadow-xl border border-purple-500 neon-border backdrop-blur-lg max-w-md w-full"
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1, transition: { duration: 0.8 } }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="absolute bg-black bg-opacity-60 p-8 rounded-lg shadow-xl backdrop-blur-lg w-[350px] text-center"
       >
-        {/* Glitching Title */}
-        <h2 className="text-4xl font-extrabold text-purple-400 text-center mb-4 glitch-effect">SIGN UP</h2>
-        
-        {error && <p className="text-red-500 text-center">{error}</p>}
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="username"
-            placeholder="👤 Username"
-            onChange={handleChange}
-            className="w-full p-3 bg-gray-900 border border-purple-400 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-purple-400 neon-input"
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="📧 Email"
-            onChange={handleChange}
-            className="w-full p-3 bg-gray-900 border border-purple-400 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-purple-400 neon-input"
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="🔒 Password"
-            onChange={handleChange}
-            className="w-full p-3 bg-gray-900 border border-purple-400 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-purple-400 neon-input"
-          />
-          <motion.button
-            type="submit"
-            className="w-full py-3 bg-purple-500 hover:bg-purple-600 rounded-lg text-lg font-semibold text-black shadow-md neon-button pulse-effect"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            🚀 Sign Up
-          </motion.button>
+        <h2 className="text-3xl text-white mb-4 font-bold">Sign Up</h2>
+        {error && <p className="text-red-500">{error}</p>}
+        <form onSubmit={handleSubmit}>
+          <input type="text" name="username" placeholder="Username" onChange={handleChange} className="w-full p-2 my-2 bg-gray-900 border border-neon rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400 outline-none" />
+          <input type="email" name="email" placeholder="Email" onChange={handleChange} className="w-full p-2 my-2 bg-gray-900 border border-neon rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400 outline-none" />
+          <input type="password" name="password" placeholder="Password" onChange={handleChange} className="w-full p-2 my-2 bg-gray-900 border border-neon rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400 outline-none" />
+          <input type="password" name="confirmPassword" placeholder="Confirm Password" onChange={handleChange} className="w-full p-2 my-2 bg-gray-900 border border-neon rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-400 outline-none" />
+          <button className="bg-gradient-to-r from-green-500 to-blue-600 text-white w-full py-2 rounded-lg mt-4 hover:opacity-90 transition-all">
+            Sign Up
+          </button>
+          <p className="mt-4 text-gray-400">Already have an account? <Link to="/login" className="text-blue-400 hover:underline">Login</Link></p>
         </form>
-
-        {/* Login Link */}
-        <p className="mt-4 text-center text-gray-400">
-          Already have an account? 
-          <Link to="/login" className="text-purple-300 hover:text-purple-400 transition"> Login</Link>
-        </p>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 
