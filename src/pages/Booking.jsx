@@ -77,7 +77,13 @@ const Booking = () => {
           </h2>
           <div className='grid grid-cols-10 gap-2'>
             {seatingChart.map((row, rowIndex)=>
-             
+             row.map((seat, colIndex)=>(
+              <motion.div
+                key={}
+              >
+
+              </motion.div>
+             ))
             )}
 
           </div>
