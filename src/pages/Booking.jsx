@@ -80,6 +80,9 @@ const Booking = () => {
              row.map((seat, colIndex)=>(
               <motion.div
                 key={`${rowIndex}-${colIndex}`}
+                className={`w-8 h-8 flex items-center justify-center rounded ${
+                  seat=== 'x' ? 'bg-red-500' :selectedSeats.includes(`${rowIndex}-${colIndex}`) ? 'bg-green-500 scale-110' : 'bg-gray-600'
+                }`}
               >
 
               </motion.div>
