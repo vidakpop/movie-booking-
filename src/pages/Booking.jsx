@@ -12,12 +12,14 @@ const Booking = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (!movieId) {
+      console.error("No movieId found in URL");
+      return;
+    }
+
     axios
       .get(`http://127.0.0.1:8000/api/cinemas/?movie_id=${movieId}`)
-      .then((response) => {
-        console.log("Cinemas API Response:", response.data); // Debugging
-        setCinemas(Array.isArray(response.data) ? response.data : []);
-      })
+      .then((response) => setCinemas(response.data))
       .catch((error) => console.error("Error fetching cinemas", error));
   }, [movieId]);
   
