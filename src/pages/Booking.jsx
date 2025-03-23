@@ -14,9 +14,13 @@ const Booking = () => {
   useEffect(() => {
     axios
       .get(`/api/cinemas/?movie_id=${movieId}`)
-      .then((response) => setCinemas(response.data))
-      .catch((error) => console.error('Error fetching cinemas', error));
+      .then((response) => {
+        console.log("Cinemas API Response:", response.data); // Debugging
+        setCinemas(Array.isArray(response.data) ? response.data : []);
+      })
+      .catch((error) => console.error("Error fetching cinemas", error));
   }, [movieId]);
+  
 
   const handleCinemaSelect = (cinema) => {
     setSelectedCinema(cinema);
