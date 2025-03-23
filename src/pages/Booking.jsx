@@ -84,6 +84,7 @@ const Booking = () => {
                   seat=== 'x' ? 'bg-red-500' :selectedSeats.includes(`${rowIndex}-${colIndex}`) ? 'bg-green-500 scale-110' : 'bg-gray-600'
                 }`}
                 whileTap={{scale:0.8}}
+                onClick={() => handleSeatSelect(rowIndex,colIndex)}
               >
 
               </motion.div>
