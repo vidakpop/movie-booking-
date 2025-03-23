@@ -7,13 +7,12 @@ const Booking = () => {
   const { movieId } = useParams();
   const [cinemas, setCinemas] = useState([]);
   const [selectedCinema, setSelectedCinema] = useState(null);
-  const [seatingChart, setSeatingChart] = useState([]);
+  const [seatingChart, setSeatingChart] = useState([]); // ✅ No default nested array
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!movieId) return;
-
     axios.get(`http://127.0.0.1:8000/api/cinemas/?movie_id=${movieId}`)
       .then((response) => setCinemas(response.data))
       .catch((error) => console.error("Error fetching cinemas", error));
@@ -23,14 +22,13 @@ const Booking = () => {
     const cinema = cinemas.find((c) => c.id == cinemaId);
     if (cinema) {
       setSelectedCinema(cinema);
-      setSeatingChart(Array.isArray(cinema.seating_chart) ? cinema.seating_chart : []);
+      setSeatingChart(Array.isArray(cinema.seating_chart) ? cinema.seating_chart : []); 
       setSelectedSeats([]);
     }
   };
 
   const handleSeatSelect = (row, col) => {
-    if (!Array.isArray(seatingChart) || !Array.isArray(seatingChart[row])) return;
-    if (seatingChart[row][col] === 'X') return;
+    if (!Array.isArray(seatingChart[row]) || seatingChart[row][col] === 'X') return;
 
     const seatKey = `${row}-${col}`;
     setSelectedSeats((prev) =>
@@ -66,27 +64,36 @@ const Booking = () => {
   };
 
   const seatGrid = useMemo(() => {
-    if (!Array.isArray(seatingChart)) return <p>No seating chart available</p>;
+    if (!Array.isArray(seatingChart) || seatingChart.length === 0) {
+      return <p className="text-gray-400">No seating chart available</p>;
+    }
 
-    return seatingChart.map((row, rowIndex) => {
-      if (!Array.isArray(row)) return null; // Ensure each row is an array
+    return seatingChart.map((row, rowIndex) => (
+      <div key={rowIndex} className="flex space-x-1">
+        {Array.isArray(row) ? row.map((seat, colIndex) => {
+          const seatKey = `${rowIndex}-${colIndex}`;
+          const isSelected = selectedSeats.includes(seatKey);
+          const isReserved = seat === 'X';
 
-      return row.map((seat, colIndex) => {
-        const isSelected = selectedSeats.includes(`${rowIndex}-${colIndex}`);
-        return (
-          <motion.div
-            key={`${rowIndex}-${colIndex}`}
-            className={`w-8 h-8 flex items-center justify-center rounded cursor-pointer transition ${
-              seat === 'X' ? 'bg-red-500' : isSelected ? 'bg-green-500 scale-110' : 'bg-gray-600 hover:bg-gray-500'
-            }`}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => handleSeatSelect(rowIndex, colIndex)}
-          >
-            {seat === 'X' ? 'X' : 'O'}
-          </motion.div>
-        );
-      });
-    });
+          // Generate seat labels like "A1", "B2"
+          const seatLabel = `${String.fromCharCode(65 + rowIndex)}${colIndex + 1}`;
+
+          return (
+            <motion.div
+              key={seatKey}
+              className={`w-10 h-10 flex items-center justify-center rounded cursor-pointer transition text-sm font-bold ${
+                isReserved ? 'bg-gray-500 text-white' : 
+                isSelected ? 'bg-green-500 scale-110' : 'bg-gray-300 hover:bg-gray-400'
+              }`}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => !isReserved && handleSeatSelect(rowIndex, colIndex)}
+            >
+              {isReserved ? 'X' : seatLabel}
+            </motion.div>
+          );
+        }) : null}
+      </div>
+    ));
   }, [seatingChart, selectedSeats]);
 
   return (
