@@ -139,23 +139,57 @@ const Booking = () => {
       </motion.button>
 
       <AnimatePresence>
-        {showPopup && (
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.8 }} 
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+      {showPopup && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 backdrop-blur-md z-50"
+          onClick={() => setShowPopup(false)} // Close popup when clicking outside
+        >
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            transition={{ type: "spring", stiffness: 100 }}
+            className="relative p-6 w-96 bg-gray-900 text-white border border-blue-500 shadow-xl rounded-lg neon-glow"
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
           >
-            <div className="bg-white text-gray-900 p-6 rounded-lg shadow-lg max-w-sm text-center">
-              <h2 className="text-2xl font-bold">🎉 Booking Successful! 🎉</h2>
-              <p className="mt-2">Hey <span className="text-blue-600 font-semibold">{username}</span>, you got:</p>
-              <p className="mt-2 text-lg font-bold">Seats: {selectedSeats.join(', ')}</p>
-              <p className="text-sm mt-2 italic">Hope you don’t bring snacks for the whole row! 🍿😂</p>
-              <button onClick={() => setShowPopup(false)} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg">Cool! 😎</button>
-            </div>
+            {/* Cyberpunk Title */}
+            <h2 className="text-3xl font-extrabold text-cyan-400 tracking-widest neon-text">
+              🎉 ACCESS GRANTED 🎉
+            </h2>
+
+            {/* Username Display */}
+            <p className="mt-3 text-lg text-gray-300">
+              Welcome, <span className="text-pink-500 font-semibold">{username}</span>
+            </p>
+
+            {/* Seat Details */}
+            <p className="mt-2 text-lg font-bold text-cyan-300">
+              Seats Locked In: <span className="text-yellow-300">{selectedSeats.join(", ")}</span>
+            </p>
+
+            {/* Fun Message */}
+            <p className="text-sm mt-2 italic text-gray-400">
+              Hope you don’t hack the entire row’s snacks! 🍿😂
+            </p>
+
+            {/* Close Button */}
+            <button
+              exit={{ opacity: 0, scale: 0.5 }}
+              onClick={() => setShowPopup(false)} // Ensure it correctly updates state
+              className="mt-4 px-6 py-2 bg-cyan-500 hover:bg-cyan-600 text-black font-bold rounded-lg transition-all shadow-lg glitch-btn"
+            >
+              Cool! 😎
+            </button>
+
+            {/* Cyberpunk Light Effects */}
+            <div className="absolute inset-0 border-4 border-cyan-400 neon-border animate-pulse opacity-50"></div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </motion.div>
+      )}
+    </AnimatePresence>
     </div>
   );
 };
