@@ -76,6 +76,9 @@ const Booking = () => {
             Select Seats
           </h2>
           <div className='grid grid-cols-10 gap-2'>
+            {seatingChart.map((row, rowIndex)=>
+             
+            )}
 
           </div>
 
