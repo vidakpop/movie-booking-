@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { motion,AnimatePresence } from 'framer-motion';
 
 const Booking = () => {
   const { movieId } = useParams();
@@ -10,6 +10,9 @@ const Booking = () => {
   const [seatingChart, setSeatingChart] = useState([]);
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+
 
   useEffect(() => {
     if (!movieId) return;
@@ -40,12 +43,10 @@ const Booking = () => {
       alert('Please select a cinema and at least one seat.');
       return;
     }
-  
+    
     setLoading(true);
-  
-    // Get token from localStorage (or wherever it's stored)
-    const token = localStorage.getItem("access_token");  
-  
+    const token = localStorage.getItem("access_token");
+    
     axios.post(
       'http://127.0.0.1:8000/api/bookings/',
       {
@@ -54,13 +55,11 @@ const Booking = () => {
         seats: selectedSeats.map((seat) => seat.split('-').map(Number)),
       },
       {
-        headers: {
-          Authorization: `Bearer ${token}`, // Add token to headers
-        },
+        headers: { Authorization: `Bearer ${token}` },
       }
     )
       .then(() => {
-        alert('Booking successful!');
+        setShowPopup(true);
         setSeatingChart((prevChart) =>
           prevChart.map((row, rowIndex) =>
             row.map((seat, colIndex) =>
@@ -73,6 +72,7 @@ const Booking = () => {
       .catch((error) => alert('Booking failed: ' + (error.response?.data?.message || "Unknown error")))
       .finally(() => setLoading(false));
   };
+
   
 
   const seatGrid = useMemo(() => {
@@ -137,6 +137,25 @@ const Booking = () => {
       >
         {loading ? 'Booking...' : 'Confirm Booking ✅'}
       </motion.button>
+
+      <AnimatePresence>
+        {showPopup && (
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }} 
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+          >
+            <div className="bg-white text-gray-900 p-6 rounded-lg shadow-lg max-w-sm text-center">
+              <h2 className="text-2xl font-bold">🎉 Booking Successful! 🎉</h2>
+              <p className="mt-2">Hey <span className="text-blue-600 font-semibold">{username}</span>, you got:</p>
+              <p className="mt-2 text-lg font-bold">Seats: {selectedSeats.join(', ')}</p>
+              <p className="text-sm mt-2 italic">Hope you don’t bring snacks for the whole row! 🍿😂</p>
+              <button onClick={() => setShowPopup(false)} className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg">Cool! 😎</button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
