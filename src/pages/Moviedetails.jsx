@@ -33,14 +33,12 @@ const Moviedetails = () => {
     if (loading) return <p className="text-white text-center">Loading...</p>;
 
     return (
-        <motion.div
-            className="bg-black min-h-screen text-white overflow-hidden"
-            initial={{ opacity: 0 }}
+        <motion.div 
+            className="bg-black min-h-screen text-white overflow-hidden" 
+            initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }}
         >
-            {/* Split-screen layout */}
             <div className="flex flex-col lg:flex-row h-screen">
-                {/* Left side: Movie Poster */}
                 <motion.div
                     className="w-full lg:w-1/2 h-1/2 lg:h-full relative overflow-hidden"
                     initial={{ opacity: 0, x: -100 }}
@@ -51,9 +49,7 @@ const Moviedetails = () => {
                         alt={movie.title}
                         className="w-full h-full object-cover"
                     />
-                    {/* Gradient overlay */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black opacity-70"></div>
-                    {/* Floating 3D effect */}
                     <motion.div
                         className="absolute inset-0"
                         whileHover={{ scale: 1.05 }}
@@ -61,7 +57,7 @@ const Moviedetails = () => {
                     >
                         <div className="absolute bottom-8 left-8">
                             <motion.h1
-                                className="text-5xl font-bold"
+                                className="text-5xl font-bold text-cyan-400"
                                 initial={{ opacity: 0, y: 50 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.5, duration: 1 }}
@@ -79,8 +75,6 @@ const Moviedetails = () => {
                         </div>
                     </motion.div>
                 </motion.div>
-
-                {/* Right side: Movie Details */}
                 <motion.div
                     className="w-full lg:w-1/2 h-1/2 lg:h-full p-8 lg:p-16 flex flex-col justify-center bg-gray-900"
                     initial={{ opacity: 0, x: 100 }}
