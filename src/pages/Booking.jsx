@@ -13,7 +13,7 @@ const Booking = () => {
 
   useEffect(() => {
     axios
-      .get(`/api/cinemas/?movie_id=${movieId}`)
+      .get(`http://127.0.0.1:8000/api/cinemas/?movie_id=${movieId}`)
       .then((response) => {
         console.log("Cinemas API Response:", response.data); // Debugging
         setCinemas(Array.isArray(response.data) ? response.data : []);
