@@ -42,7 +42,7 @@ const Booking = () => {
     }
 
     setLoading(true);
-    axios.post('/api/bookings/', {
+    axios.post('http://127.0.0.1:8000/api/bookings/', {
       movie_id: movieId,
       cinema_id: selectedCinema.id,
       seats: selectedSeats.map((seat) => seat.split('-').map(Number)),
