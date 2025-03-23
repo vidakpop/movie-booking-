@@ -35,6 +35,7 @@ const Navbar = () => {
         <Link to="/" className="hover:text-blue-400 cursor-pointer text-white">Home</Link>
         <Link to="/movies" className="hover:text-blue-400 cursor-pointer text-white">Movies</Link>
         {isAuthenticated ? (
+          
           <button onClick={handleLogout} className="hover:text-red-400 cursor-pointer text-white">
             Logout
           </button>

@@ -31,7 +31,7 @@ const BookingsPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center py-10">
-      <h1 className="text-4xl font-extrabold text-cyan-400 neon-text">🎬 My Movie Bookings</h1>
+      <h1 className="text-4xl font-extrabold text-cyan-400 neon-text mt-8">🎬 My Movie Bookings</h1>
 
       {loading && <p className="mt-6 text-lg text-gray-400">Loading your bookings... ⏳</p>}
       {error && <p className="mt-6 text-lg text-red-500">{error}</p>}

@@ -7,7 +7,7 @@ import Hero from './components/Hero'
 import Dashboard from './pages/Dashboard'
 import Movies from './pages/movies'
 import Moviedetails from './pages/Moviedetails'
-import Booking from './pages/Booking'
+import Booking from './pages/BookingsPage'
 
 const App = () => {
   return (
@@ -21,6 +21,7 @@ const App = () => {
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/movies/:id' element={<Moviedetails/>}/>
         <Route path='/bookings/:movieId' element={<Booking/>}/>
+        <Route path='/mybooking' element={<Booking/>}/>
       </Routes>
     </div>
   )
