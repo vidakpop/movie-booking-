@@ -35,7 +35,7 @@ const Movies = () => {
         {movies.map((movie) => (
           <motion.div
             key={movie.id}
-            className="relative p-4 bg-gray-900 rounded-xl shadow-2xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-cyan-400/50"
+            className="relative p-4 bg-gray-900 rounded-xl shadow-2xl overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-cyan-400/50 border border-cyan-400"
             whileHover={{ scale: 1.1 }}
             onClick={() => navigate(`/movies/${movie.id}`)}
           >
@@ -43,11 +43,11 @@ const Movies = () => {
             <img
               src={movie.poster.startsWith("http") ? movie.poster : `${MEDIA_URL}${movie.poster}`}
               alt={movie.title}
-              className="rounded-lg w-full object-cover"
+              className="rounded-lg w-full h-72 object-cover object-center"
             />
             <div className="absolute bottom-4 left-4">
-              <h2 className="text-cyan-300 text-2xl font-semibold">{movie.title}</h2>
-              <p className="text-gray-400">{movie.genre}</p>
+              <h2 className="text-cyan-300 text-2xl font-semibold drop-shadow-lg">{movie.title}</h2>
+              <p className="text-gray-400 text-sm">{movie.genre}</p>
             </div>
           </motion.div>
         ))}
