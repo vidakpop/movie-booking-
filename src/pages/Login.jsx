@@ -1,6 +1,5 @@
-// Login.js
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Threads from '../components/Threads';
@@ -8,6 +7,7 @@ import Threads from '../components/Threads';
 const Login = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -21,7 +21,16 @@ const Login = () => {
     try {
       const response = await axios.post("http://127.0.0.1:8000/api/auth/login/", formData);
       localStorage.setItem("access_token", response.data.access_token);
-      navigate("/movies");
+      
+      // Show popup
+      setShowPopup(true);
+      
+      // Hide popup after 3 seconds and navigate
+      setTimeout(() => {
+        setShowPopup(false);
+        navigate("/movies");
+      }, 3000);
+
     } catch (err) {
       setError("Invalid credentials");
     }
@@ -31,6 +40,22 @@ const Login = () => {
     <div className="relative w-full h-screen bg-black flex items-center justify-center overflow-hidden">
       {/* Background Animation */}
       <Threads amplitude={1} distance={0} enableMouseInteraction={true} />
+
+      {/* Welcome Pop-up */}
+      <AnimatePresence>
+        {showPopup && (
+          <motion.div
+            initial={{ x: "100%", opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: "100%", opacity: 0 }}
+            transition={{ type: "spring", stiffness: 100, damping: 15 }}
+            className="absolute top-10 right-5 bg-black bg-opacity-70 backdrop-blur-lg p-4 rounded-lg shadow-xl w-64 text-center border border-blue-500"
+          >
+            <h3 className="text-xl text-blue-400 font-bold">Welcome Back!</h3>
+            <p className="text-gray-300">You have successfully logged in.</p>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Login Form */}
       <motion.div
