@@ -86,6 +86,7 @@ const Booking = () => {
                 whileTap={{scale:0.8}}
                 onClick={() => handleSeatSelect(rowIndex,colIndex)}
               >
+                {seat === 'X' ? 'X': 'O'}
 
               </motion.div>
              ))
