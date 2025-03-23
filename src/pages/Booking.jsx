@@ -79,7 +79,7 @@ const Booking = () => {
             {seatingChart.map((row, rowIndex)=>
              row.map((seat, colIndex)=>(
               <motion.div
-                key={}
+                key={`${rowIndex}-${colIndex}`}
               >
 
               </motion.div>
