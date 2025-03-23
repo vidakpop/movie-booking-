@@ -1,25 +1,95 @@
-import React from 'react'
-import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Threads from '../components/Threads';
+
 const Signup = () => {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: ""
+  });
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      await axios.post("http://127.0.0.1:8000/api/auth/signup/", formData);
+      navigate("/login");
+    } catch (err) {
+      setError("❌ Sign-up failed. Try again.");
+    }
+  };
+
   return (
     <motion.div
-        initial={{opacity: 0,scale: 0.8}}
-        animate={{opacity: 1,scale: 1}}
-        className='h-screen flex items-center justify-center'
+      initial={{ opacity: 0, scale: 0.8 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className="flex bg-black items-center justify-center h-screen relative overflow-hidden"
     >
-        <div className='bg-black bg-opacity-60 p-8 rounded-lg shadow-lg'>
-            <h2 className='text-3xl text-neon mb-4'>
-                Sign Up
-            </h2>
-            <input type="text" placeholder='Name' className='w-full p-2 my-2 bg-gray-800 border border-neon text-white' />
-            <input type="email" placeholder='Email' className='w-full p-2 my-2 bg-gray-800 border border-neon text-white'/>
-            <input type="password" placeholder='Password' className='w-full p-2 my-2 bg-gray-800 border border-neon text-white' />
-            <button className='bg-neon w-full py-2 rounded mt-4'>Sign Up</button>
-        </div>
-        
-    </motion.div>
-  )
-}
+      <Threads amplitude={1} distance={0} enableMouseInteraction={true} />
 
-export default Signup
+      {/* Cyberpunk Background */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-900 via-black to-purple-900 opacity-50"></div>
+
+      <motion.div
+        className="relative z-10 bg-black bg-opacity-70 p-8 rounded-lg shadow-xl border border-purple-500 neon-border backdrop-blur-lg max-w-md w-full"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1, transition: { duration: 0.8 } }}
+      >
+        {/* Glitching Title */}
+        <h2 className="text-4xl font-extrabold text-purple-400 text-center mb-4 glitch-effect">SIGN UP</h2>
+        
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            type="text"
+            name="username"
+            placeholder="👤 Username"
+            onChange={handleChange}
+            className="w-full p-3 bg-gray-900 border border-purple-400 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-purple-400 neon-input"
+          />
+          <input
+            type="email"
+            name="email"
+            placeholder="📧 Email"
+            onChange={handleChange}
+            className="w-full p-3 bg-gray-900 border border-purple-400 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-purple-400 neon-input"
+          />
+          <input
+            type="password"
+            name="password"
+            placeholder="🔒 Password"
+            onChange={handleChange}
+            className="w-full p-3 bg-gray-900 border border-purple-400 text-white placeholder-gray-500 rounded-lg focus:ring-2 focus:ring-purple-400 neon-input"
+          />
+          <motion.button
+            type="submit"
+            className="w-full py-3 bg-purple-500 hover:bg-purple-600 rounded-lg text-lg font-semibold text-black shadow-md neon-button pulse-effect"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            🚀 Sign Up
+          </motion.button>
+        </form>
+
+        {/* Login Link */}
+        <p className="mt-4 text-center text-gray-400">
+          Already have an account? 
+          <Link to="/login" className="text-purple-300 hover:text-purple-400 transition"> Login</Link>
+        </p>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+export default Signup;
