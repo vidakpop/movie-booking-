@@ -23,7 +23,7 @@ const Movies = () => {
       transition={{ duration: 1 }}
     >
       <motion.h1 
-        className="text-5xl font-extrabold text-center mb-8 text-cyan-400 neon-glow"
+        className="text-5xl font-extrabold text-center mb-8 text-cyan-400 neon-glow mt-10"
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8 }}
