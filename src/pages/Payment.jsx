@@ -8,6 +8,10 @@ const Payment = () => {
     const navigate = useNavigate();
     const {selectedSeats, moviePrice,movieId,cinemaId} = location.state || {};
 
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [email, setEmail] = useState('');
+    const [loading, setLoading] = useState(false);
+
     
   return (
     <div>Payment</div>
