@@ -11,7 +11,14 @@ const Payment = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
+    const totalAmount = selectedSeats.length * moviePrice;
 
+    useEffect(() =>{
+        if (!selectedSeats || selectedSeats.length === 0) {
+            alert('No seats selected. Please go back and select seats.');
+            navigate(-1);
+        }
+    }, [selectedSeats, navigate]);
     
   return (
     <div>Payment</div>
