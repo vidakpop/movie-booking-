@@ -11,8 +11,7 @@ const Payment = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
-    const totalAmount = selectedSeats.length * moviePrice;
-
+    const totalAmount = moviePrice // * selectedSeats.length;
     useEffect(() =>{
         if (!selectedSeats || selectedSeats.length === 0) {
             alert('No seats selected. Please go back and select seats.');
@@ -46,7 +45,42 @@ const Payment = () => {
     }
     
   return (
-    <div>Payment</div>
+    <div>
+       <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-6">
+      <h1 className="text-3xl font-bold mb-4">Payment Details</h1>
+      <p className="text-lg mb-2">Selected Seats: {selectedSeats?.join(', ')}</p>
+      <p className="text-lg font-bold mb-6">Total Amount: KES {totalAmount}</p>
+
+      <input
+        type="tel"
+        placeholder="Enter M-Pesa Number"
+        className="p-2 mb-4 rounded bg-gray-800 text-white w-80"
+        value={phoneNumber}
+        onChange={(e) => setPhoneNumber(e.target.value)}
+      />
+      
+      <input
+        type="email"
+        placeholder="Enter Email"
+        className="p-2 mb-4 rounded bg-gray-800 text-white w-80"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+
+      <motion.button
+        onClick={handlePayment}
+        className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-lg"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        disabled={loading}
+      >
+        {loading ? 'Processing...' : 'Pay Now'}
+      </motion.button>
+    </div>
+  );
+};
+
+    </div>
   )
 }
 
