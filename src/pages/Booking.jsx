@@ -44,35 +44,17 @@ const Booking = () => {
       alert('Please select a cinema and at least one seat.');
       return;
     }
-    
-    setLoading(true);
-    const token = localStorage.getItem("access_token");
-    
-    axios.post(
-      'http://127.0.0.1:8000/api/bookings/',
-      {
-        movie_id: movieId,
-        cinema_id: selectedCinema.id,
-        seats: selectedSeats.map((seat) => seat.split('-').map(Number)),
+  
+    // Navigate to payment with state
+    navigate('/payment', {
+      state: {
+        movieId,
+        cinema: selectedCinema,
+        seats: selectedSeats,
       },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
-      .then(() => {
-        setShowPopup(true);
-        setSeatingChart((prevChart) =>
-          prevChart.map((row, rowIndex) =>
-            row.map((seat, colIndex) =>
-              selectedSeats.includes(`${rowIndex}-${colIndex}`) ? 'X' : seat
-            )
-          )
-        );
-        setSelectedSeats([]);
-      })
-      .catch((error) => alert('Booking failed: ' + (error.response?.data?.message || "Unknown error")))
-      .finally(() => setLoading(false));
+    });
   };
+  
 
   
 
