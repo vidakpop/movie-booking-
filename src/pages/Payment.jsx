@@ -7,13 +7,13 @@ const Payment = () => {
     const location = useLocation();
     const navigate = useNavigate();
     
-    const {selectedSeats, moviePrice,movieId,cinemaId} = location.state || {};
+    const {selectedSeats,movieId,cinemaId} = location.state || {};
 
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const [moviePrice, setMoviePrice] = useState(null);
-  
+
     const totalAmount = moviePrice * selectedSeats.length;
     useEffect(() => {
       if (!selectedSeats || selectedSeats.length === 0) {
