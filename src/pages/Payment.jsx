@@ -32,7 +32,7 @@ const Payment = () => {
         movie_id: movieId,
         cinema_id: cinemaId,
         seats: selectedSeats,
-      }
+      })
     }
     
   return (
