@@ -14,7 +14,8 @@ const Payment = () => {
     const [loading, setLoading] = useState(false);
     const [moviePrice, setMoviePrice] = useState(null);
 
-    const totalAmount = moviePrice * selectedSeats.length;
+    const totalAmount = moviePrice && selectedSeats ? moviePrice * selectedSeats.length : 0;
+
     useEffect(() => {
       if (!selectedSeats || selectedSeats.length === 0) {
         alert('No seats selected. Please go back and select seats.');
