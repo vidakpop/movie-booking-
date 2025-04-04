@@ -37,6 +37,9 @@ const Payment = () => {
         alert('Payment initiated.Please complete the payment on your phone')
         navigate('/confirmation', {state: {email, phoneNumber, selectedSeats, moviePrice, movieId, cinemaId}});
       })
+      .catch(error => {
+        alert('Payment failed. Please try again.' + (error.response?.data?.message || 'Unknown error'));
+      })
     }
     
   return (
