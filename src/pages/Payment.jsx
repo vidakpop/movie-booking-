@@ -45,8 +45,7 @@ const Payment = () => {
     }
     
   return (
-    <div>
-       <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-6">
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-6">
       <h1 className="text-3xl font-bold mb-4">Payment Details</h1>
       <p className="text-lg mb-2">Selected Seats: {selectedSeats?.join(', ')}</p>
       <p className="text-lg font-bold mb-6">Total Amount: KES {totalAmount}</p>
@@ -79,9 +78,4 @@ const Payment = () => {
     </div>
   );
 };
-
-    </div>
-  )
-}
-
 export default Payment
