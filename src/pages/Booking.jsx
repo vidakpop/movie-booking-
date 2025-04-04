@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import { motion,AnimatePresence } from 'framer-motion';
 
 const Booking = () => {
@@ -12,6 +12,7 @@ const Booking = () => {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate();
 
 
   useEffect(() => {
