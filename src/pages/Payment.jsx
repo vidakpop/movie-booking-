@@ -13,12 +13,31 @@ const Payment = () => {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
     const totalAmount = moviePrice * selectedSeats.length;
-    useEffect(() =>{
-        if (!selectedSeats || selectedSeats.length === 0) {
-            alert('No seats selected. Please go back and select seats.');
-            navigate(-1);
+    useEffect(() => {
+      if (!selectedSeats || selectedSeats.length === 0) {
+        alert('No seats selected. Please go back and select seats.');
+        navigate(-1);
+      }
+    
+      // Fetch movie details using movieId
+      const fetchMoviePrice = async () => {
+        try {
+          const response = await axios.get(`http://127.0.0.1:8000/api/movies/${movieId}/`);
+          const price = response.data.price;
+          setMoviePrice(price);
+        } catch (error) {
+          console.error('Failed to fetch movie price:', error);
+          alert('Could not fetch movie details. Please try again.');
+          navigate(-1);
         }
-    }, [selectedSeats, navigate]);
+      };
+    
+      if (!moviePrice) {
+        fetchMoviePrice();
+      }
+    
+    }, [selectedSeats, movieId, moviePrice, navigate]);
+    
     console.log("moviePrice:", moviePrice);
 console.log("selectedSeats:", selectedSeats);
 console.log("selectedSeats.length:", selectedSeats?.length);
