@@ -24,6 +24,7 @@ const Payment = () => {
         alert('Please enter your phone number and email.');
         return;
       }
+      setLoading(true);
     }
     
   return (
