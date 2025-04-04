@@ -12,6 +12,8 @@ const Payment = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
+    const [moviePrice, setMoviePrice] = useState(null);
+  
     const totalAmount = moviePrice * selectedSeats.length;
     useEffect(() => {
       if (!selectedSeats || selectedSeats.length === 0) {
