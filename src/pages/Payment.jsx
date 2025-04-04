@@ -25,6 +25,14 @@ const Payment = () => {
         return;
       }
       setLoading(true);
+      axios.post('http://127.0.0.1:8080/api/payment/', {
+        phone_number: phoneNumber,
+        email,
+        amount: totalAmount,
+        movie_id: movieId,
+        cinema_id: cinemaId,
+        seats: selectedSeats,
+      }
     }
     
   return (
