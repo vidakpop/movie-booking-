@@ -40,6 +40,9 @@ const Payment = () => {
       .catch(error => {
         alert('Payment failed. Please try again.' + (error.response?.data?.message || 'Unknown error'));
       })
+      .finally(() => {
+        setLoading(false);
+      });
     }
     
   return (
