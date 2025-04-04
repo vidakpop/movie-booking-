@@ -33,6 +33,10 @@ const Payment = () => {
         cinema_id: cinemaId,
         seats: selectedSeats,
       })
+      .then(response => {
+        alert('Payment initiated.Please complete the payment on your phone')
+        navigate('/confirmation', {state: {email, phoneNumber, selectedSeats, moviePrice, movieId, cinemaId}});
+      })
     }
     
   return (
