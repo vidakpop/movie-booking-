@@ -19,6 +19,12 @@ const Payment = () => {
             navigate(-1);
         }
     }, [selectedSeats, navigate]);
+    const handlePayment = () => {
+      if (!phoneNumber || !email) {
+        alert('Please enter your phone number and email.');
+        return;
+      }
+    }
     
   return (
     <div>Payment</div>
