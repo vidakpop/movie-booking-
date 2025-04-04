@@ -73,6 +73,7 @@ const Booking = () => {
         // 🚀 Navigate to payment page and pass selectedSeats and other info
         navigate('/payment', {
           state: {
+            moviePrice: selectedCinema.price,
             selectedSeats,
             movieId,
             cinemaId: selectedCinema.id,

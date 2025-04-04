@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 const Payment = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    
     const {selectedSeats, moviePrice,movieId,cinemaId} = location.state || {};
 
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -18,6 +19,10 @@ const Payment = () => {
             navigate(-1);
         }
     }, [selectedSeats, navigate]);
+    console.log("moviePrice:", moviePrice);
+console.log("selectedSeats:", selectedSeats);
+console.log("selectedSeats.length:", selectedSeats?.length);
+
     const handlePayment = () => {
       if (!phoneNumber || !email) {
         alert('Please enter your phone number and email.');
