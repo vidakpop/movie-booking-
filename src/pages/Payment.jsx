@@ -7,7 +7,7 @@ const Payment = () => {
     const location = useLocation();
     const navigate = useNavigate();
     
-    const {selectedSeats,movieId,cinemaId} = location.state || {};
+    const {selectedSeats,movieId,cinemaId,bookingId} = location.state || {};
 
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
@@ -42,8 +42,10 @@ const Payment = () => {
     }, [selectedSeats, movieId, moviePrice, navigate]);
     
     console.log("moviePrice:", moviePrice);
-console.log("selectedSeats:", selectedSeats);
-console.log("selectedSeats.length:", selectedSeats?.length);
+    console.log("Location State:", location.state);
+    console.log("selectedSeats:", selectedSeats);
+    console.log("selectedSeats.length:", selectedSeats?.length);
+    console.log("BOOKING:", bookingId);
 
     const handlePayment = () => {
       if (!phoneNumber || !email) {
@@ -51,13 +53,15 @@ console.log("selectedSeats.length:", selectedSeats?.length);
         return;
       }
       setLoading(true);
-      axios.post('http://127.0.0.1:8080/api/payment/', {
+      axios.post('http://127.0.0.1:8000/api/payment/initiate/', {
         phone_number: phoneNumber,
         email,
         amount: totalAmount,
         movie_id: movieId,
         cinema_id: cinemaId,
         seats: selectedSeats,
+        booking_id: bookingId,
+        
       })
       .then(response => {
         alert('Payment initiated.Please complete the payment on your phone')
