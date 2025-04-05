@@ -39,7 +39,7 @@ const Booking = () => {
     );
   };
 
-  const handleBooking = () => {
+  const handleBooking = async () => {
     if (!selectedCinema || selectedSeats.length === 0) {
       alert('Please select a cinema and at least one seat.');
       return;
@@ -48,43 +48,46 @@ const Booking = () => {
     setLoading(true);
     const token = localStorage.getItem("access_token");
   
-    axios.post(
-      'http://127.0.0.1:8000/api/bookings/',
-      {
-        movie_id: movieId,
-        cinema_id: selectedCinema.id,
-        seats: selectedSeats.map((seat) => seat.split('-').map(Number)),
-      },
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    )
-      .then(() => {
-        setShowPopup(true);
-        setSeatingChart((prevChart) =>
-          prevChart.map((row, rowIndex) =>
-            row.map((seat, colIndex) =>
-              selectedSeats.includes(`${rowIndex}-${colIndex}`) ? 'X' : seat
-            )
-          )
-        );
-        setSelectedSeats([]);
+    try {
+      const response = await axios.post(
+        'http://127.0.0.1:8000/api/bookings/',
+        {
+          movie_id: movieId,
+          cinema_id: selectedCinema.id,
+          seats: selectedSeats.map((seat) => seat.split('-').map(Number)),
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      console.log("Booking API Response:", response.data)
+      const bookingId = response.data.booking_id; // Get the booking ID from the response
   
-        // 🚀 Navigate to payment page and pass selectedSeats and other info
-        navigate('/payment', {
-          state: {
-            moviePrice: selectedCinema.price,
-            selectedSeats,
-            movieId,
-            cinemaId: selectedCinema.id,
-            moviePrice: selectedCinema.price, // assuming cinema has price
-          },
-        });
-      })
-      .catch((error) =>
-        alert('Booking failed: ' + (error.response?.data?.message || "Unknown error"))
-      )
-      .finally(() => setLoading(false));
+      setShowPopup(true);
+      setSeatingChart((prevChart) =>
+        prevChart.map((row, rowIndex) =>
+          row.map((seat, colIndex) =>
+            selectedSeats.includes(`${rowIndex}-${colIndex}`) ? 'X' : seat
+          )
+        )
+      );
+      setSelectedSeats([]);
+  
+      // Navigate to payment page and pass bookingId, selectedSeats, and other info
+      navigate('/payment', {
+        state: {
+          moviePrice: selectedCinema.price,
+          selectedSeats,
+          movieId,
+          cinemaId: selectedCinema.id,
+          bookingId: bookingId, // Pass the booking ID
+        },
+      });
+    } catch (error) {
+      alert('Booking failed: ' + (error.response?.data?.message || "Unknown error"));
+    } finally {
+      setLoading(false);
+    }
   };
 
   
