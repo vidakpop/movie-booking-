@@ -52,7 +52,16 @@ const Payment = () => {
         alert('Please enter your phone number and email.');
         return;
       }
+    
+      const token = localStorage.getItem('access_token'); // 🟢 Assuming you stored token as 'access'
+    
+      if (!token) {
+        alert('You must be logged in to make a payment.');
+        return;
+      }
+    
       setLoading(true);
+    
       axios.post('http://127.0.0.1:8000/api/payment/initiate/', {
         phone_number: phoneNumber,
         email,
@@ -61,19 +70,24 @@ const Payment = () => {
         cinema_id: cinemaId,
         seats: selectedSeats,
         booking_id: bookingId,
-        
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}` // ✅ attach token here
+        }
       })
       .then(response => {
-        alert('Payment initiated.Please complete the payment on your phone')
-        navigate('/confirmation', {state: {email, phoneNumber, selectedSeats, moviePrice, movieId, cinemaId}});
+        alert('Payment initiated. Please complete the payment on your phone.');
+        navigate('/confirmation', { state: { email, phoneNumber, selectedSeats, moviePrice, movieId, cinemaId } });
       })
       .catch(error => {
-        alert('Payment failed. Please try again.' + (error.response?.data?.message || 'Unknown error'));
+        console.error('Payment error:', error);
+        alert('Payment failed. ' + (error.response?.data?.message || 'Unknown error'));
       })
       .finally(() => {
         setLoading(false);
       });
-    }
+    };
+    
     
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-6">
