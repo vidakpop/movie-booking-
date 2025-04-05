@@ -10,6 +10,7 @@ import Moviedetails from './pages/Moviedetails'
 import BookingsPage from './pages/BookingsPage'
 import Booking from './pages/Booking'
 import Payment from './pages/Payment'
+import Confirmation from './pages/Confirmation'
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
         <Route path='/bookings/:movieId' element={<Booking/>}/>
         <Route path='/payment' element={<Payment/>}/>
         <Route path='/mybooking' element={<BookingsPage/>}/>
+        <Route path='/confirmation' element={<Confirmation/>}/>
       </Routes>
     </div>
   )

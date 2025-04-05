@@ -76,9 +76,21 @@ const Payment = () => {
         }
       })
       .then(response => {
-        alert('Payment initiated. Please complete the payment on your phone.');
-        navigate('/confirmation', { state: { email, phoneNumber, selectedSeats, moviePrice, movieId, cinemaId } });
+        alert('Payment initiated. Please complete the payment on your phone');
+        navigate('/confirmation', {
+          state: {
+            email,
+            phoneNumber,
+            selectedSeats,
+            moviePrice,
+            movieId,
+            cinemaId,
+            booking_id: bookingId,
+            checkout_request_id: response.data.checkout_request_id, // 👈 Pass it here
+          }
+        });
       })
+      
       .catch(error => {
         console.error('Payment error:', error);
         alert('Payment failed. ' + (error.response?.data?.message || 'Unknown error'));
