@@ -74,15 +74,18 @@ const Booking = () => {
       setSelectedSeats([]);
   
       // Navigate to payment page and pass bookingId, selectedSeats, and other info
-      navigate('/payment', {
-        state: {
-          moviePrice: selectedCinema.price,
-          selectedSeats,
-          movieId,
-          cinemaId: selectedCinema.id,
-          bookingId: bookingId, // Pass the booking ID
-        },
-      });
+      const bookingData = {
+        moviePrice: selectedCinema.price,
+        selectedSeats,
+        movieId,
+        cinemaId: selectedCinema.id,
+        bookingId,
+      };
+      
+      localStorage.setItem('bookingData', JSON.stringify(bookingData));
+      
+      navigate('/payment', { state: bookingData });
+      
     } catch (error) {
       alert('Booking failed: ' + (error.response?.data?.message || "Unknown error"));
     } finally {
