@@ -30,24 +30,22 @@ const Confirmation = () => {
       navigate('/payment', { state: location.state });
       return;
     }
-
-    const checkPaymentStatus = async () => {
+  
+    const checkPaymentStatus = async (retries = 5) => {
       try {
         const response = await axios.post("http://127.0.0.1:8000/api/payment/status/", {
           checkout_request_id
         });
-
+  
         if (response.data.status === "success") {
           setPaymentSuccess(true);
           setReceiptNumber(response.data.mpesa_receipt_number);
-
-          // ✅ Release the seats
-          await axios.post("http://127.0.0.1:8000/api/release-seats/", {
-            booking_id
-          });
-
-          // ✅ Generate PDF ticket
+          await axios.post("http://127.0.0.1:8000/api/release-seats/", { booking_id });
           generatePdf(response.data.mpesa_receipt_number);
+          setLoading(false);
+        } else if (retries > 0 && response.data.status === "processing") {
+          // Wait and retry
+          setTimeout(() => checkPaymentStatus(retries - 1), 5000); // retry every 5 seconds
         } else {
           alert("Payment was not successful. Please try again.");
           navigate('/payment', { state: location.state });
@@ -55,13 +53,12 @@ const Confirmation = () => {
       } catch (error) {
         alert("Something went wrong while confirming your payment.");
         navigate('/payment', { state: location.state });
-      } finally {
-        setLoading(false);
       }
     };
-
-    checkPaymentStatus();
+  
+    checkPaymentStatus(); // Call initial
   }, [checkout_request_id, navigate]);
+  
 
   const generatePdf = (receipt) => {
     const doc = new jsPDF();
