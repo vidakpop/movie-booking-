@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 
 const Confirmation = () => {
   const location = useLocation();
@@ -20,6 +22,7 @@ const Confirmation = () => {
   const [loading, setLoading] = useState(true);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [receiptNumber, setReceiptNumber] = useState(null);
+  const [pdfUrl, setPdfUrl] = useState(null);
 
   useEffect(() => {
     if (!checkout_request_id) {
@@ -37,6 +40,14 @@ const Confirmation = () => {
         if (response.data.status === "success") {
           setPaymentSuccess(true);
           setReceiptNumber(response.data.mpesa_receipt_number);
+
+          // ✅ Release the seats
+          await axios.post("http://127.0.0.1:8000/api/release-seats/", {
+            booking_id
+          });
+
+          // ✅ Generate PDF ticket
+          generatePdf(response.data.mpesa_receipt_number);
         } else {
           alert("Payment was not successful. Please try again.");
           navigate('/payment', { state: location.state });
@@ -52,24 +63,59 @@ const Confirmation = () => {
     checkPaymentStatus();
   }, [checkout_request_id, navigate]);
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen bg-gray-900 text-white">
-        <p>Checking payment status...</p>
-      </div>
-    );
-  }
+  const generatePdf = (receipt) => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("🎟️ Movie Ticket Confirmation", 20, 20);
+
+    doc.setFontSize(12);
+    doc.autoTable({
+      startY: 30,
+      head: [['Field', 'Details']],
+      body: [
+        ['Name/Email', email],
+        ['Phone Number', phoneNumber],
+        ['Movie ID', movieId],
+        ['Cinema ID', cinemaId],
+        ['Seats Booked', selectedSeats.join(', ')],
+        ['Total Amount', `KES ${moviePrice * selectedSeats.length}`],
+        ['M-Pesa Receipt', receipt],
+      ],
+    });
+
+    const pdfBlob = doc.output('blob');
+    const pdfURL = URL.createObjectURL(pdfBlob);
+    setPdfUrl(pdfURL);
+  };
 
   return (
-    <div className="min-h-screen bg-green-900 text-white flex flex-col items-center justify-center p-6">
-      {paymentSuccess ? (
-        <>
-          <h1 className="text-3xl font-bold mb-4">🎉 Payment Successful!</h1>
-          <p className="text-lg mb-2">Your booking is confirmed for seats: {selectedSeats?.join(', ')}</p>
-          <p className="mb-2">Movie ID: {movieId}</p>
-          <p className="mb-2">Total Paid: KES {moviePrice * selectedSeats.length}</p>
-          {receiptNumber && <p className="text-sm mt-4">Receipt Number: {receiptNumber}</p>}
-        </>
+    <div className="min-h-screen flex items-center justify-center bg-black text-white p-4">
+      {loading ? (
+        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="bg-white text-black p-6 rounded-xl shadow-lg text-center">
+            <h2 className="text-xl font-semibold mb-2">Processing Payment...</h2>
+            <p>Please wait while we confirm your payment with M-Pesa.</p>
+            <div className="mt-4 border-t-4 border-green-500 w-12 h-12 mx-auto animate-spin rounded-full" />
+          </div>
+        </div>
+      ) : paymentSuccess ? (
+        <div className="text-center bg-green-800 p-6 rounded-xl shadow-lg">
+          <h1 className="text-3xl font-bold text-green-300 mb-4">🎉 Payment Successful!</h1>
+          <p className="mb-2">Your booking is confirmed.</p>
+          <p className="mb-2">Seats: <strong>{selectedSeats.join(', ')}</strong></p>
+          <p className="mb-2">Amount Paid: KES <strong>{moviePrice * selectedSeats.length}</strong></p>
+          <p className="mb-2">Receipt: <strong>{receiptNumber}</strong></p>
+
+          {pdfUrl && (
+            <a
+              href={pdfUrl}
+              download="movie_ticket.pdf"
+              className="mt-4 inline-block bg-white text-green-800 px-4 py-2 rounded hover:bg-gray-200 transition"
+            >
+              📄 Download Ticket (PDF)
+            </a>
+          )}
+        </div>
       ) : (
         <p className="text-lg">Something went wrong. Redirecting you back to payment...</p>
       )}
