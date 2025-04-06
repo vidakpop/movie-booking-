@@ -7,25 +7,48 @@ const Payment = () => {
     const location = useLocation();
     const navigate = useNavigate();
     
-    const {selectedSeats,movieId,cinemaId,bookingId} = location.state || {};
+    const [selectedSeats, setSelectedSeats] = useState([]);
+    const [movieId, setMovieId] = useState(null);
+    const [cinemaId, setCinemaId] = useState(null);
+    const [bookingId, setBookingId] = useState(null);
+    const [moviePrice, setMoviePrice] = useState(null);
 
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
-    const [moviePrice, setMoviePrice] = useState(null);
+
+    const [processingPopup, setProcessingPopup] = useState(false);
+
 
     const totalAmount = moviePrice && selectedSeats ? moviePrice * selectedSeats.length : 0;
 
     useEffect(() => {
-      if (!selectedSeats || selectedSeats.length === 0) {
-        alert('No seats selected. Please go back and select seats.');
-        navigate(-1);
+      // Get from location or fallback to localStorage
+      let data = location.state;
+    
+      if (!data) {
+        const stored = localStorage.getItem('bookingData');
+        if (stored) {
+          data = JSON.parse(stored);
+        }
       }
     
-      // Fetch movie details using movieId
+      if (!data || !data.selectedSeats || data.selectedSeats.length === 0) {
+        alert('No seats selected. Please go back and select seats.');
+        navigate('/');
+        return;
+      }
+    
+      // Set values to state
+      setSelectedSeats(data.selectedSeats || []);
+      setMovieId(data.movieId);
+      setCinemaId(data.cinemaId);
+      setBookingId(data.bookingId);
+    
+      // Fetch movie price
       const fetchMoviePrice = async () => {
         try {
-          const response = await axios.get(`http://127.0.0.1:8000/api/movies/${movieId}/`);
+          const response = await axios.get(`http://127.0.0.1:8000/api/movies/${data.movieId}/`);
           const price = response.data.price;
           setMoviePrice(price);
         } catch (error) {
@@ -38,8 +61,8 @@ const Payment = () => {
       if (!moviePrice) {
         fetchMoviePrice();
       }
+    }, [location.state, navigate, moviePrice]);
     
-    }, [selectedSeats, movieId, moviePrice, navigate]);
     
     console.log("moviePrice:", moviePrice);
     console.log("Location State:", location.state);
