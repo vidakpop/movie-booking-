@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
 
 const Confirmation = () => {
   const location = useLocation();
@@ -11,7 +9,7 @@ const Confirmation = () => {
   const {
     email,
     phoneNumber,
-    selectedSeats,
+    selectedSeats = [],
     moviePrice,
     movieId,
     cinemaId,
@@ -22,7 +20,8 @@ const Confirmation = () => {
   const [loading, setLoading] = useState(true);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [receiptNumber, setReceiptNumber] = useState(null);
-  const [pdfUrl, setPdfUrl] = useState(null);
+  const [popupMessage, setPopupMessage] = useState("⌛ Processing payment. Please wait...");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     if (!checkout_request_id) {
@@ -30,91 +29,102 @@ const Confirmation = () => {
       navigate('/payment', { state: location.state });
       return;
     }
-  
-    const checkPaymentStatus = async (retries = 5) => {
+
+    const checkPaymentStatus = async (retries = 6) => {
       try {
+        console.log("Checking payment status...");
+
         const response = await axios.post("http://127.0.0.1:8000/api/payment/status/", {
-          checkout_request_id
+          checkout_request_id,
         });
-  
-        if (response.data.status === "success") {
+
+        const data = response.data;
+        console.log("Payment Status Response:", data);
+
+        const { status, message, mpesa_receipt_number } = data;
+
+        setPopupMessage(message);
+
+        if (status === "success") {
           setPaymentSuccess(true);
-          setReceiptNumber(response.data.mpesa_receipt_number);
-          await axios.post("http://127.0.0.1:8000/api/release-seats/", { booking_id });
-          generatePdf(response.data.mpesa_receipt_number);
+          setReceiptNumber(mpesa_receipt_number || "N/A");
+
+          if (booking_id) {
+            await axios.post("http://127.0.0.1:8000/api/release-seats/", { booking_id });
+          } else {
+            console.warn("⚠️ Missing booking_id for releasing seats.");
+          }
+
           setLoading(false);
-        } else if (retries > 0 && response.data.status === "processing") {
-          // Wait and retry
-          setTimeout(() => checkPaymentStatus(retries - 1), 5000); // retry every 5 seconds
+        } else if (status === "failed") {
+          setErrorMessage("❌ " + message);
+          setLoading(false);
+          setTimeout(() => {
+            navigate('/payment', { state: location.state });
+          }, 5000);
+        } else if (status === "pending" && retries > 0) {
+          setTimeout(() => checkPaymentStatus(retries - 1), 7000);
         } else {
-          alert("Payment was not successful. Please try again.");
-          navigate('/payment', { state: location.state });
+          setPopupMessage("⚠️ Payment is still processing. Please try again later.");
+          setErrorMessage("Payment timeout.");
+          setLoading(false);
+          setTimeout(() => {
+            navigate('/payment', { state: location.state });
+          }, 5000);
         }
+
       } catch (error) {
-        alert("Something went wrong while confirming your payment.");
-        navigate('/payment', { state: location.state });
+        console.error("❌ Error checking payment:", error);
+        setPopupMessage("❌ An error occurred while checking payment.");
+        setErrorMessage(error.response?.data?.message || error.message);
+        setLoading(false);
+        setTimeout(() => {
+          navigate('/payment', { state: location.state });
+        }, 5000);
       }
     };
-  
-    checkPaymentStatus(); // Call initial
+
+    checkPaymentStatus();
   }, [checkout_request_id, navigate]);
-  
-
-  const generatePdf = (receipt) => {
-    const doc = new jsPDF();
-    doc.setFontSize(18);
-    doc.text("🎟️ Movie Ticket Confirmation", 20, 20);
-
-    doc.setFontSize(12);
-    doc.autoTable({
-      startY: 30,
-      head: [['Field', 'Details']],
-      body: [
-        ['Name/Email', email],
-        ['Phone Number', phoneNumber],
-        ['Movie ID', movieId],
-        ['Cinema ID', cinemaId],
-        ['Seats Booked', selectedSeats.join(', ')],
-        ['Total Amount', `KES ${moviePrice * selectedSeats.length}`],
-        ['M-Pesa Receipt', receipt],
-      ],
-    });
-
-    const pdfBlob = doc.output('blob');
-    const pdfURL = URL.createObjectURL(pdfBlob);
-    setPdfUrl(pdfURL);
-  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white p-4">
-      {loading ? (
-        <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
-          <div className="bg-white text-black p-6 rounded-xl shadow-lg text-center">
-            <h2 className="text-xl font-semibold mb-2">Processing Payment...</h2>
-            <p>Please wait while we confirm your payment with M-Pesa.</p>
-            <div className="mt-4 border-t-4 border-green-500 w-12 h-12 mx-auto animate-spin rounded-full" />
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6 relative">
+      {loading && (
+        <div className="absolute inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
+          <div className="bg-white text-black p-6 rounded-lg shadow-lg text-center max-w-md w-full animate-pulse">
+            <p className="text-lg font-semibold mb-2">{popupMessage}</p>
+            <div className="mt-4">
+              <svg className="animate-spin h-8 w-8 text-blue-600 mx-auto" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+              </svg>
+            </div>
+            {errorMessage && (
+              <p className="text-red-600 text-sm mt-4">{errorMessage}</p>
+            )}
           </div>
         </div>
-      ) : paymentSuccess ? (
-        <div className="text-center bg-green-800 p-6 rounded-xl shadow-lg">
-          <h1 className="text-3xl font-bold text-green-300 mb-4">🎉 Payment Successful!</h1>
-          <p className="mb-2">Your booking is confirmed.</p>
-          <p className="mb-2">Seats: <strong>{selectedSeats.join(', ')}</strong></p>
-          <p className="mb-2">Amount Paid: KES <strong>{moviePrice * selectedSeats.length}</strong></p>
-          <p className="mb-2">Receipt: <strong>{receiptNumber}</strong></p>
+      )}
 
-          {pdfUrl && (
-            <a
-              href={pdfUrl}
-              download="movie_ticket.pdf"
-              className="mt-4 inline-block bg-white text-green-800 px-4 py-2 rounded hover:bg-gray-200 transition"
-            >
-              📄 Download Ticket (PDF)
-            </a>
-          )}
+      {!loading && paymentSuccess && (
+        <div className="text-center bg-white text-black p-6 rounded-xl shadow-xl max-w-lg w-full">
+          <h1 className="text-3xl font-bold mb-4">✅ Payment Successful!</h1>
+          <p className="text-lg mb-2">Booking confirmed for seats: <strong>{selectedSeats?.join(', ')}</strong></p>
+          <p className="mb-2">🎬 Movie ID: {movieId}</p>
+          <p className="mb-2">💰 Total Paid: <strong>KES {moviePrice * selectedSeats.length}</strong></p>
+          {receiptNumber && <p className="text-sm mt-4">📄 Receipt Number: <strong>{receiptNumber}</strong></p>}
+
+          <button
+            onClick={() => navigate('/')}
+            className="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+          >
+            Go to Home
+          </button>
         </div>
-      ) : (
-        <p className="text-lg">Something went wrong. Redirecting you back to payment...</p>
+      )}
+
+      {!loading && !paymentSuccess && errorMessage && (
+        <p className="text-lg text-red-400">❌ Payment failed or timed out. Redirecting to payment...</p>
       )}
     </div>
   );
