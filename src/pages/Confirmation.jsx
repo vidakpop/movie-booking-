@@ -30,7 +30,7 @@ const Confirmation = () => {
       return;
     }
 
-    const checkPaymentStatus = async (retries = 6) => {
+    const checkPaymentStatus = async (retries = 8) => {
       try {
         console.log("Checking payment status...");
 
@@ -63,7 +63,7 @@ const Confirmation = () => {
             navigate('/payment', { state: location.state });
           }, 5000);
         } else if (status === "pending" && retries > 0) {
-          setTimeout(() => checkPaymentStatus(retries - 1), 7000);
+          setTimeout(() => checkPaymentStatus(retries - 1), 15000);
         } else {
           setPopupMessage("⚠️ Payment is still processing. Please try again later.");
           setErrorMessage("Payment timeout.");
