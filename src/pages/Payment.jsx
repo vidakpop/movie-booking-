@@ -76,7 +76,7 @@ const Payment = () => {
         return;
       }
     
-      const token = localStorage.getItem('access_token'); // 🟢 Assuming you stored token as 'access'
+      const token = localStorage.getItem('access_token'); // Assuming you stored token as 'access'
     
       if (!token) {
         alert('You must be logged in to make a payment.');
@@ -95,11 +95,12 @@ const Payment = () => {
         booking_id: bookingId,
       }, {
         headers: {
-          'Authorization': `Bearer ${token}` // ✅ attach token here
+          'Authorization': `Bearer ${token}` // Attach token here
         }
       })
       .then(response => {
         alert('Payment initiated. Please complete the payment on your phone');
+        // Save checkout_request_id for later use
         navigate('/confirmation', {
           state: {
             email,
@@ -109,11 +110,10 @@ const Payment = () => {
             movieId,
             cinemaId,
             booking_id: bookingId,
-            checkout_request_id: response.data.checkout_request_id, // 👈 Pass it here
+            checkout_request_id: response.data.checkout_request_id, // Pass it here
           }
         });
       })
-      
       .catch(error => {
         console.error('Payment error:', error);
         alert('Payment failed. ' + (error.response?.data?.message || 'Unknown error'));
@@ -122,6 +122,7 @@ const Payment = () => {
         setLoading(false);
       });
     };
+    
     
     
   return (

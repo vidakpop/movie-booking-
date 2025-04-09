@@ -29,32 +29,39 @@ const Confirmation = () => {
       navigate('/payment', { state: location.state });
       return;
     }
-
+  
     const checkPaymentStatus = async (retries = 8) => {
       try {
         console.log("Checking payment status...");
-
+  
         const response = await axios.post("http://127.0.0.1:8000/api/payment/status/", {
           checkout_request_id,
         });
-
+  
         const data = response.data;
         console.log("Payment Status Response:", data);
-
+  
         const { status, message, mpesa_receipt_number } = data;
-
+  
         setPopupMessage(message);
-
+  
         if (status === "success") {
           setPaymentSuccess(true);
           setReceiptNumber(mpesa_receipt_number || "N/A");
-
+  
+          // Call to update payment status
+          await axios.post("http://127.0.0.1:8000/api/update-payment/", {
+            booking_id,
+            status: 'success',
+            mpesa_receipt_number: mpesa_receipt_number,
+          });
+  
           if (booking_id) {
             await axios.post("http://127.0.0.1:8000/api/release-seats/", { booking_id });
           } else {
             console.warn("⚠️ Missing booking_id for releasing seats.");
           }
-
+  
           setLoading(false);
         } else if (status === "failed") {
           setErrorMessage("❌ " + message);
@@ -72,7 +79,7 @@ const Confirmation = () => {
             navigate('/payment', { state: location.state });
           }, 5000);
         }
-
+  
       } catch (error) {
         console.error("❌ Error checking payment:", error);
         setPopupMessage("❌ An error occurred while checking payment.");
@@ -83,10 +90,10 @@ const Confirmation = () => {
         }, 5000);
       }
     };
-
+  
     checkPaymentStatus();
   }, [checkout_request_id, navigate]);
-
+  
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6 relative">
       {loading && (
