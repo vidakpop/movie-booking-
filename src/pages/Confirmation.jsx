@@ -22,6 +22,7 @@ const Confirmation = () => {
   const [receiptNumber, setReceiptNumber] = useState(null);
   const [popupMessage, setPopupMessage] = useState("⌛ Processing payment. Please wait...");
   const [errorMessage, setErrorMessage] = useState("");
+  const [ticketUrl, setTicketUrl] = useState("");
 
   useEffect(() => {
     if (!checkout_request_id) {
@@ -29,71 +30,71 @@ const Confirmation = () => {
       navigate('/payment', { state: location.state });
       return;
     }
-  
+
     const checkPaymentStatus = async (retries = 8) => {
       try {
-        console.log("Checking payment status...");
-  
+        setPopupMessage("⌛ Confirming your payment...");
         const response = await axios.post("http://127.0.0.1:8000/api/payment/status/", {
           checkout_request_id,
         });
-  
+
         const data = response.data;
-        console.log("Payment Status Response:", data);
-  
         const { status, message, mpesa_receipt_number } = data;
-  
+
         setPopupMessage(message);
-  
+
         if (status === "success") {
           setPaymentSuccess(true);
           setReceiptNumber(mpesa_receipt_number || "N/A");
-  
-          // Call to update payment status
-          await axios.post("http://127.0.0.1:8000/api/update-payment/", {
+
+          // Update booking as successful in backend
+          const updateResponse = await axios.post("http://127.0.0.1:8000/api/update-payment/", {
             booking_id,
             status: 'success',
             mpesa_receipt_number: mpesa_receipt_number,
           });
-  
+
+          // Release seats
           if (booking_id) {
             await axios.post("http://127.0.0.1:8000/api/release-seats/", { booking_id });
-          } else {
-            console.warn("⚠️ Missing booking_id for releasing seats.");
           }
-  
+
+          // Optional: Generate or fetch ticket URL from backend
+          const ticketResponse = await axios.get(`http://127.0.0.1:8000/api/download-ticket/${booking_id}/`);
+          setTicketUrl(ticketResponse.data.ticket_url);
+
           setLoading(false);
         } else if (status === "failed") {
           setErrorMessage("❌ " + message);
           setLoading(false);
-          setTimeout(() => {
-            navigate('/payment', { state: location.state });
-          }, 5000);
+          setTimeout(() => navigate('/payment', { state: location.state }), 5000);
         } else if (status === "pending" && retries > 0) {
-          setTimeout(() => checkPaymentStatus(retries - 1), 15000);
+          setTimeout(() => checkPaymentStatus(retries - 1), 10000);
         } else {
-          setPopupMessage("⚠️ Payment is still processing. Please try again later.");
+          setPopupMessage("⚠️ Payment is still processing. Try again later.");
           setErrorMessage("Payment timeout.");
           setLoading(false);
-          setTimeout(() => {
-            navigate('/payment', { state: location.state });
-          }, 5000);
+          setTimeout(() => navigate('/payment', { state: location.state }), 5000);
         }
-  
+
       } catch (error) {
         console.error("❌ Error checking payment:", error);
         setPopupMessage("❌ An error occurred while checking payment.");
         setErrorMessage(error.response?.data?.message || error.message);
         setLoading(false);
-        setTimeout(() => {
-          navigate('/payment', { state: location.state });
-        }, 5000);
+        setTimeout(() => navigate('/payment', { state: location.state }), 5000);
       }
     };
-  
+
     checkPaymentStatus();
   }, [checkout_request_id, navigate]);
-  
+
+  const handleDownloadTicket = () => {
+    if (ticketUrl) {
+      window.open(ticketUrl, "_blank");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-6 relative">
       {loading && (
@@ -106,9 +107,7 @@ const Confirmation = () => {
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
             </div>
-            {errorMessage && (
-              <p className="text-red-600 text-sm mt-4">{errorMessage}</p>
-            )}
+            {errorMessage && <p className="text-red-600 text-sm mt-4">{errorMessage}</p>}
           </div>
         </div>
       )}
@@ -119,11 +118,20 @@ const Confirmation = () => {
           <p className="text-lg mb-2">Booking confirmed for seats: <strong>{selectedSeats?.join(', ')}</strong></p>
           <p className="mb-2">🎬 Movie ID: {movieId}</p>
           <p className="mb-2">💰 Total Paid: <strong>KES {moviePrice * selectedSeats.length}</strong></p>
-          {receiptNumber && <p className="text-sm mt-4">📄 Receipt Number: <strong>{receiptNumber}</strong></p>}
+          {receiptNumber && <p className="text-sm mt-4">📄 Receipt: <strong>{receiptNumber}</strong></p>}
+
+          {ticketUrl && (
+            <button
+              onClick={handleDownloadTicket}
+              className="mt-4 inline-block bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition"
+            >
+              🎟️ Download Ticket
+            </button>
+          )}
 
           <button
             onClick={() => navigate('/')}
-            className="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+            className="mt-4 inline-block bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition ml-2"
           >
             Go to Home
           </button>
